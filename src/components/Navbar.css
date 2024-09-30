@@ -1,0 +1,23 @@
+.dropdown:hover .dropdown-menu {
+    display: block;
+  }
+  
+  .custom-button {
+    background: #009a53;
+    /* box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25); */
+  }
+  @media (max-width: 600px) {
+    #menu , #location{
+      display:none;
+    }
+   
+  }
+  
+  .navbar {
+    position: relative; /* or use fixed if it's supposed to stay on top during scroll */
+    z-index: 100;
+  }
+  .dropdown {
+    z-index: 9999;
+    position: absolute;
+  }

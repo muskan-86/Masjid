@@ -1,0 +1,14 @@
+/* styles.css */
+.hidden-on-mobile {
+    display: none;
+  }
+  
+  @media (min-width: 1024px) {
+    .hidden-on-desktop {
+      display: none;
+    }
+    .hidden-on-mobile {
+      display: flex;
+    }
+  }
+  

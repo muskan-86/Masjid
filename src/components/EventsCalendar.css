@@ -1,0 +1,149 @@
+.dropdown:hover .dropdown-menu {
+    display: block;
+  }
+  
+  .custom-button {
+    background: #009a53;
+    /* box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25); */
+  }
+  
+  .loader {
+    width: 50px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    display: grid;
+    -webkit-mask: conic-gradient(from 15deg, #0000, #000);
+    animation: spin 1s infinite steps(12);
+  }
+  
+  .loader,
+  .loader::before,
+  .loader::after {
+    background:
+        radial-gradient(closest-side at 50% 12.5%, #009a53 96%, transparent) 50% 0/20% 80% repeat-y,
+        radial-gradient(closest-side at 12.5% 50%, #009a53 96%, transparent) 0 50%/80% 20% repeat-x;
+  }
+  
+  .loader::before,
+  .loader::after {
+    content: "";
+    grid-area: 1 / 1;
+    transform: rotate(30deg);
+  }
+  
+  .loader::after {
+    transform: rotate(60deg);
+  }
+  
+  @keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+  }
+  
+  .fc .fc-toolbar button {
+    background-color: #009a53;
+    color: white;
+    border: none;
+  }
+  
+  .fc .fc-toolbar button:hover {
+    background-color: #009a53;
+  }
+  
+  .fc .fc-dayGridMonth-button,
+  .fc .fc-today-button,
+  .fc .fc-timeGridWeek-button,
+  .fc .fc-timeGridDay-button {
+    background-color: #009a53 !important;
+  }
+  
+  .fc .fc-dayGridMonth-button:hover,
+  .fc .fc-today-button:hover,
+  .fc .fc-timeGridWeek-button:hover,
+  .fc .fc-timeGridDay-button:hover {
+    background-color: #039955 !important;
+  }
+  
+  @media (max-width: 500px) {
+    .fc .fc-toolbar button {
+    width: 10vw;
+   
+  }
+  .fc .fc-dayGridMonth-button,
+  .fc .fc-today-button {
+    width: 5vw;
+   
+  }
+  .fc .fc-dayGridMonth-button,
+  .fc .fc-today-button,
+  .fc .fc-timeGridWeek-button,
+  .fc .fc-timeGridDay-button {
+   display:none ;
+    
+  }
+  }
+  
+  /* Ensure the navbar items stack vertically on small screens */
+  
+  @media (max-width: 768px) {
+    .navbar-content {
+        flex-direction: column;
+        align-items: center;
+    }
+  
+    .navbar-content .menu {
+        display: none;
+    }
+  
+    .navbar-content .mobile-menu {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+  
+    .dropdown-menu {
+        position: static;
+        width: 100%;
+        box-shadow: none;
+    }
+  }
+  
+  /* Responsive Admin Login Form */
+  @media (max-width: 7680px) {
+   
+    #admin-login {
+      width: 100%;
+      padding: 16px;
+  }
+   
+  }
+  @media (max-width: 600px) {
+    #menu , #location{
+      display:none;
+    }
+    
+   
+  }
+  
+  /* Responsive Calendar and Event List */
+  @media (max-width: 900px) {
+    #calendar-and-list {
+        flex-direction: column;
+        justify-content: center;
+        overflow-y: hidden;
+        gap: 16px;
+    }
+    #calendar{
+        max-height: 100%;
+        width:80%;
+        margin:0 auto;
+        overflow-y: hidden;
+    }
+    #event-list {
+        width: 80%;
+        margin:0 auto;
+    
+    }
+  }
+  
