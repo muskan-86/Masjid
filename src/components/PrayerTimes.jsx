@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Papa from 'papaparse';
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
+import { getStorage, ref, listAll, getDownloadURL } from 'firebase/storage';
 import { getFirestore, collection, getDocs } from "firebase/firestore";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
@@ -14,10 +14,21 @@ const PrayerTimes = () => {
     const fetchPrayerTimes = async () => {
         try {
             const storage = getStorage();
-            const csvRef = ref(storage, 'prayer_times/prayerschedule.csv');
+            const csvRef = ref(storage, 'prayer_times/'); // Reference to the folder
 
-            const url = await getDownloadURL(csvRef);
-            setCsvDownloadURL(url);
+            // Get the latest file from Firebase Storage
+            const fileList = await listAll(csvRef);
+            if (fileList.items.length === 0) {
+                console.error('No CSV files found in the prayer_times folder!');
+                return;
+            }
+
+            // Get the latest file
+            const latestFile = fileList.items[fileList.items.length - 1];
+            const fileName = latestFile.name;
+
+            const url = await getDownloadURL(latestFile);
+            setCsvDownloadURL({ url, fileName });
 
             const response = await fetch(url);
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -26,15 +37,30 @@ const PrayerTimes = () => {
             Papa.parse(text, {
                 header: true,
                 complete: (results) => {
+                    // Log the entire parsed CSV data
+                    console.log('Parsed CSV Data:', results.data);
+
                     const now = new Date();
-                    const todayDate = now.getDate();
+                    const todayDate = now.getDate(); // Get the current date as a number
 
                     const todayTimes = results.data.find(time => {
-                        const dateValue = time.Date.trim();
-                        return parseInt(dateValue) === todayDate;
+                        const dateValue = time?.Date?.trim(); // Check if 'Date' exists
+                        if (dateValue) {
+                            const dayValue = parseInt(dateValue, 10); // Convert to integer
+                            // Log the comparison for debugging
+                            console.log(`Comparing CSV Date: ${dayValue} with Today's Date: ${todayDate}`);
+                            return dayValue === todayDate; // Compare day of the month
+                        }
+                        return false;
                     });
 
-                    setTodayPrayerTimes(todayTimes);
+                    if (todayTimes) {
+                        // Log found prayer times for today
+                        console.log('Found prayer times for today:', todayTimes);
+                        setTodayPrayerTimes(todayTimes);
+                    } else {
+                        console.error(`No prayer times found for today's date: ${todayDate}`);
+                    }
                 },
                 error: (error) => {
                     console.error('Error parsing CSV:', error);
@@ -46,18 +72,19 @@ const PrayerTimes = () => {
     };
 
     useEffect(() => {
-        fetchPrayerTimes();
+        fetchPrayerTimes(); // Fetch the latest CSV file
         fetchKhateebSchedule(); // Fetch the Khateeb schedule on component mount
     }, []);
 
+
     const openCSVInNewTab = async () => {
         try {
-            const response = await fetch(csvDownloadURL);
+            const response = await fetch(csvDownloadURL.url);
             const text = await response.text();
             const newTab = window.open('', '_blank');
 
             if (newTab) {
-                const downloadLink = `<a href="${csvDownloadURL}" download="prayerschedule.csv" style=" padding: 10px; margin-bottom:4px; background-color: #4CAF50; color: white; text-decoration: none; text-align: center; border-radius: 5px;">Download</a>`;
+                const downloadLink = `<a href="${csvDownloadURL.url}" download="${csvDownloadURL.fileName}" style=" padding: 10px; margin-bottom:4px; background-color: #4CAF50; color: white; text-decoration: none; text-align: center; border-radius: 5px;">Download</a>`;
                 const parsedData = Papa.parse(text, { header: true });
                 const csvTable = createHTMLTable(parsedData.data);
 
@@ -79,6 +106,8 @@ const PrayerTimes = () => {
             console.error('Error opening CSV in new tab:', error);
         }
     };
+
+
 
     const createHTMLTable = (data) => {
         let table = '<table style="width:100%; border-collapse: collapse; margin: 20px 0;">';
@@ -167,23 +196,31 @@ const PrayerTimes = () => {
                 <span className="font-bold text-center">Adhan</span>
                 <span className="font-bold text-center">Iqamah</span>
             </div>
-
             {todayPrayerTimes ? (
                 <div className="flex flex-col gap-2 text-left">
-                    {[{ name: 'Fajr', icon: './public/sunrise@2x.png', adhan: 'Fajr Adhan', iqamah: 'Fajr Iqamah' }, { name: 'Dhuhr', icon: './public/sunrise-1@2x.png', adhan: 'Zuhur Adhan', iqamah: 'Zuhur Iqamah' }, { name: 'Asr', icon: './public/sun@2x.png', adhan: 'Asr Adhan', iqamah: 'Asr Iqamah' }, { name: 'Maghrib', icon: './public/sun@2x.png', adhan: 'Maghrib Adhan', iqamah: 'Maghrib Iqamah' }, { name: 'Isha', icon: './public/sunrise@2x.png', adhan: 'Isha Adhan', iqamah: 'Isha Iqamah' }].map((prayer, index) => (
+                    {[
+                        { name: 'Fajr', icon: './public/sunrise@2x.png' },
+                        { name: 'Duhr', icon: './public/sunrise-1@2x.png' },
+                        { name: 'Asr', icon: './public/sun@2x.png' },
+                        { name: 'Maghrib', icon: './public/sun@2x.png' },
+                        { name: 'Isha', icon: './public/sunrise@2x.png' }
+                    ].map((prayer, index) => (
                         <div key={index} className="grid grid-cols-3 items-center mb-2">
                             <div className="flex items-center gap-2">
                                 <img src={prayer.icon} alt={`${prayer.name} Icon`} className="h-6 w-6" />
                                 <span className="font-bold text-base">{prayer.name}</span>
                             </div>
-                            <span className="text-base text-center">{todayPrayerTimes[prayer.adhan]}</span>
-                            <span className="text-base text-center">{todayPrayerTimes[prayer.iqamah]}</span>
+                            <span className="text-base text-center">{todayPrayerTimes[prayer.name]}</span>
+                            <span className="text-base text-center">{todayPrayerTimes[`${prayer.name} Iqama`]}</span>
                         </div>
                     ))}
                 </div>
             ) : (
                 <p>Loading prayer times...</p>
             )}
+
+
+
 
             <div className="mt-6 mb-0 text-center">
                 <button onClick={openKhateebScheduleInNewTab} className="text-white font-bold border-b-2 border-white">

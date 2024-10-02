@@ -19,17 +19,6 @@ import PrayerTimes from './PrayerTimes.jsx';
 const HomePage = () => {
   const [loading, setLoading] = useState(true); // State to track loader status
   const [isAnnouncementOpen, setIsAnnouncementOpen] = useState(false);
-//   const [khateebScheduleImage, setKhateebScheduleImage] = useState('');
-//   const [showPopup, setShowPopup] = useState(false);
-
-//   // Function to handle opening the popup from PrayerTimes page or any other page
-//   const handleShowPopup = () => {
-//     setShowPopup(true);
-// };
-
-// const handleClosePopup = () => {
-//     setShowPopup(false);
-// };
 
   useEffect(() => {
     // Simulate loader completion after a delay (e.g., 3 seconds)
@@ -105,18 +94,7 @@ const HomePage = () => {
               {/* Right Section: Prayer Times */}
               <div data-aos="zoom-in">
                 <PrayerTimes />
-                {/* {showPopup && (
-                <div className="fixed inset-0 flex items-center justify-center z-50">
-                    <div className="bg-white p-4 rounded-lg shadow-lg w-full max-w-md">
-                        
-                        {khateebScheduleImage && (
-                            <img src={khateebScheduleImage} alt="Khateeb Schedule" className="w-full h-auto" />
-                            
-                        )}
-                        <button onClick={handleClosePopup} className="text-red-500">Close</button>  
-                    </div>
-                </div>
-            )} */}
+               
               </div>
             </div>
           </div>

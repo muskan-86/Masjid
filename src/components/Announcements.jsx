@@ -1,56 +1,97 @@
-import React from 'react';
-import Slider from 'react-slick';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
+import React, { useState,useEffect } from 'react';
+import Slider from "react-slick";
+import { useAnnouncements } from '../context/AnnouncementContext';
+import Navbar from "./Navbar.jsx";
 
-const Announcements = () => {
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: true, // Enable autoplay
-    autoplaySpeed: 3000, // Adjust speed (in milliseconds)
-    arrows: true, // Show arrows
-    prevArrow: (
-        <button className="absolute flex justify-center left-4 top-1/2 transform -translate-y-1/2 z-50">
-          <img src="https://i.pinimg.com/736x/4d/e9/3f/4de93f19fad110b31d31846fced05cb9.jpg" alt="Previous" className="w-8 h-8" /> {/* Add your left arrow image */}
-        </button>
-      ),
-      nextArrow: (
-        <button className="  z-50">
-          <img src="https://icons.veryicon.com/png/o/miscellaneous/8atour/arrow-right-50.png" alt="Next" className="w-8 h-8" /> {/* Add your right arrow image */}
-        </button>
-      ),
-  };
 
-  return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-3xl relative">
-        <h2 className="text-center text-3xl font-bold mb-6">Announcements</h2>
-        <Slider {...settings}>
-          <div className="card w-70 rounded-lg">
-            <div className="relative flex flex-col items-center justify-center w-full h-full">
-              <img className="h-72 rounded-2xl w-80 object-cover" src="/Why-Islam-is-true-1536x1536.jpg" alt="Event 1" />
-            </div>
+const SampleNextArrow = (props) => {
+    const { className, style, onClick } = props;
+    return (
+        <div className={className} style={{ ...style, display: "flex", alignItems: "center", justifyContent: "center", background: "gray", 
+            borderRadius: "50%", width: "20px", height: "20px", right: '2px', zIndex: 1,
+             cursor: 'pointer' }} onClick={onClick}></div>
+    );
+};
+
+const SamplePrevArrow = (props) => {
+    const { className, style, onClick } = props;
+    return (
+        <div className={className} style={{ ...style, display: "flex", alignItems: "center", justifyContent: "center", background: "gray",
+             borderRadius: "50%", width: "20px", height: "20px", left: '2px', zIndex: 1, cursor: 'pointer' }} onClick={onClick}></div>
+    );
+};
+const Announcements = ({ onClose }) => {
+  const { announcements, fetchAnnouncements } = useAnnouncements(); // Access fetchAnnouncements
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  useEffect(() => {
+      fetchAnnouncements(); // Fetch announcements when the popup is opened
+      setCurrentSlide(0); // Reset slide to first when popup opens
+  }, []);
+
+    const settings = {
+        dots: true,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        autoplay: true,
+        autoplaySpeed: 3000,
+        nextArrow: <SampleNextArrow />,
+        prevArrow: <SamplePrevArrow />,
+        afterChange: (current) => setCurrentSlide(current),
+        customPaging: (i) => (
+            <div
+                style={{
+                    width: "12px",
+                    height: "12px",
+                    background: i === currentSlide ? getDotColor(i) : "gray", 
+                    borderRadius: "50%",
+                    transition: 'background-color 0.3s ease',
+                    
+                }}
+            />
+        ),
+    };
+
+    // Function to determine the dot color based on the slide index
+    const getDotColor = (index) => {
+        switch (index) {
+            case 0:
+                return "#10B981"; // Tailwind color for first image
+            case 1:
+                return "#10B981"; // Tailwind color for second image
+            case 2:
+                return "#10B981"; // Tailwind color for third image
+            default:
+                return "gray";
+        }
+    };
+    return (
+        <div>
+          <div>
+            <Navbar/>
           </div>
-
-          <div className="card w-70 rounded-lg">
-            <div className="relative flex flex-col items-center justify-center w-full h-full">
-              <img className="h-72 rounded-2xl w-72 object-cover" src="/Discussion-Navigating-Relationships.jpg" alt="Event 2" />
+        <div className="fixed inset-0  flex items-center justify-center z-50">
+            <div className="bg-white p-4 rounded-lg shadow-lg max-w-sm relative mx-4">
+                {/* <button onClick={onClose} className="absolute top-2 right-2 text-gray-600 text-3xl">&times;</button> */}
+                <Slider {...settings}>
+                    {announcements.length > 0 ? (
+                        announcements.map((announcement) => (
+                            <div key={announcement.id} className='w-70 rounded-lg'>
+                                <div className="relative flex flex-col items-center justify-center">
+                                    <img className="h-72 rounded-2xl max-w-md object-cover mb-4" src={announcement.imageUrl} alt={announcement.title} />
+                                </div>
+                            </div>
+                        ))
+                    ) : (
+                        <div className="text-center">No announcements available.</div>
+                    )}
+                </Slider>
             </div>
-          </div>
-
-          <div className="card w-70 rounded-lg">
-            <div className="relative flex flex-col items-center justify-center w-full h-full">
-              <img className="h-72 rounded-2xl w-72 object-cover" src="/traditional-iftar-fast-breaking.jpg" alt="Event 3" />
-            </div>
-          </div>
-        </Slider>
-      </div>
-    </div>
-  );
+        </div>
+        </div>
+    );
 };
 
 export default Announcements;

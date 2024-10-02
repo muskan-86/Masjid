@@ -1,8 +1,6 @@
-import React, { useState } from 'react';
-import Slider from "react-slick";
+import React, { useState, useEffect } from 'react';
+import Slider from 'react-slick';
 import { useAnnouncements } from '../context/AnnouncementContext';
-
-
 
 const SampleNextArrow = (props) => {
     const { className, style, onClick } = props;
@@ -20,9 +18,22 @@ const SamplePrevArrow = (props) => {
              borderRadius: "50%", width: "20px", height: "20px", left: '2px', zIndex: 1, cursor: 'pointer' }} onClick={onClick}></div>
     );
 };
+
 const AnnouncementPopup = ({ onClose }) => {
-    const { announcements } = useAnnouncements();
+    const { announcements, fetchAnnouncements } = useAnnouncements(); 
     const [currentSlide, setCurrentSlide] = useState(0);
+    const [loading, setLoading] = useState(true); // Add loading state
+
+    // Fetch announcements when popup opens and reset the current slide
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true); // Start loading
+            await fetchAnnouncements();
+            setLoading(false); // Stop loading once data is fetched
+            setCurrentSlide(0); // Reset to the first slide
+        };
+        fetchData();
+    }, []);
 
     const settings = {
         dots: true,
@@ -43,7 +54,6 @@ const AnnouncementPopup = ({ onClose }) => {
                     background: i === currentSlide ? getDotColor(i) : "gray", 
                     borderRadius: "50%",
                     transition: 'background-color 0.3s ease',
-                    
                 }}
             />
         ),
@@ -62,24 +72,30 @@ const AnnouncementPopup = ({ onClose }) => {
                 return "gray";
         }
     };
+
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white p-4 rounded-lg shadow-lg max-w-sm relative mx-4">
-                <button onClick={onClose} className="absolute top-2 right-2 text-gray-600 text-3xl">&times;</button>
-                <Slider {...settings}>
-                    {announcements.length > 0 ? (
-                        announcements.map((announcement) => (
-                            <div key={announcement.id} className='w-70 rounded-lg'>
-                                <div className="relative flex flex-col items-center justify-center">
-                                    <img className="h-72 rounded-2xl max-w-md object-cover mb-4" src={announcement.imageUrl} alt={announcement.title} />
-                                    {/* <p className="font-bold">{announcement.title}</p> */}
+                <button onClick={() => { setCurrentSlide(0); onClose(); }} className="absolute top-2 right-2 text-gray-600 text-3xl">&times;</button>
+                
+                {/* Show loader until announcements are fetched */}
+                {loading ? (
+                    <div className="text-center p-4">Loading announcements...</div>
+                ) : (
+                    <Slider {...settings}>
+                        {announcements.length > 0 ? (
+                            announcements.map((announcement) => (
+                                <div key={announcement.id} className='w-70 rounded-lg'>
+                                    <div className="relative flex flex-col items-center justify-center">
+                                        <img className="h-72 rounded-2xl max-w-md object-cover mb-4" src={announcement.imageUrl} alt={announcement.title} />
+                                    </div>
                                 </div>
-                            </div>
-                        ))
-                    ) : (
-                        <div className="text-center">No announcements available.</div>
-                    )}
-                </Slider>
+                            ))
+                        ) : (
+                            <div className="text-center">No announcements available.</div>
+                        )}
+                    </Slider>
+                )}
             </div>
         </div>
     );

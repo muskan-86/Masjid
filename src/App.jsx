@@ -15,7 +15,7 @@ import PrayerTimeUploader from './components/PrayerTimeUploader'; // Corrected i
 import ProtectedRoute from './components/ProtectedRoute';
 import EventDetails from "./components/EventDetails";
 import KhateebSchedule from "./components/KhateebSchedule.jsx";
-import AnnouncementPopup from "./components/AnnouncementPopup.jsx";
+import Announcements from "./components/Announcements.jsx";
 
 const clerkPublishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 function App() {
@@ -32,7 +32,7 @@ function App() {
             <Route path="/request" element={<RequestedEvents />} />
             <Route path="/approved" element={<ApprovedEvents />} />
             <Route path="/denied" element={<DeniedEvents />} />
-            <Route path="/announcement" element={<AnnouncementPopup />} />
+            <Route path="/announcement" element={<Announcements />} />
             <Route path="/update" element={<AnnouncementUpdate />} />
             <Route path="/event-details/:eventId" element={<EventDetails />} />
             <Route path="/prayer-times" element={<PrayerTimeUploader />} />

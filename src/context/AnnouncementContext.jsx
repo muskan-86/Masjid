@@ -9,20 +9,25 @@ export const AnnouncementProvider = ({ children }) => {
 
     // Function to fetch announcements from Firestore
     const fetchAnnouncements = async () => {
-        const querySnapshot = await getDocs(collection(db, 'announcements'));
-        const fetchedAnnouncements = querySnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data(),
-        }));
-        setAnnouncements(fetchedAnnouncements);
+        try {
+            const querySnapshot = await getDocs(collection(db, 'announcements'));
+            const fetchedAnnouncements = querySnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data(),
+            }));
+            console.log('Fetched announcements:', fetchedAnnouncements); // Debug log
+            setAnnouncements(fetchedAnnouncements);
+        } catch (error) {
+            console.error('Error fetching announcements:', error); // Error log
+        }
     };
 
     useEffect(() => {
-        fetchAnnouncements(); // Fetch announcements on provider mount
+        fetchAnnouncements(); // Initial fetch when the provider mounts
     }, []);
 
     return (
-        <AnnouncementContext.Provider value={{ announcements, setAnnouncements }}>
+        <AnnouncementContext.Provider value={{ announcements, setAnnouncements, fetchAnnouncements }}>
             {children}
         </AnnouncementContext.Provider>
     );
