@@ -1,8 +1,17 @@
 {
   "version": 2,
+  "builds": [
+    {
+      "src": "src/main.jsx", // Example entry point (if using a different structure)
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    }
+  ],
   "routes": [
     {
-      "src": "/(.*)", 
+      "src": "/(.*)",
       "dest": "/index.html"
     }
   ]
