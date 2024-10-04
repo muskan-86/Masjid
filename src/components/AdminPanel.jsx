@@ -44,9 +44,6 @@ const AdminPanel = () => {
               {/* Dropdown Menu */}
               {showEventDropdown && (
                 <ul className="relative left-0 mt-2 bg-white text-black rounded shadow-lg p-2 w-56 z-10">
-                  {/* <li className="p-2 hover:bg-green-200 rounded">
-                    <Link to="/events/add">Add Event</Link>
-                  </li> */}
                   <li className="p-2 hover:bg-green-200 rounded">
                     <Link to="/approved">Approved Events</Link>
                   </li>

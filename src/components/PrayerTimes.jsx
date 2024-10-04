@@ -199,11 +199,11 @@ const PrayerTimes = () => {
             {todayPrayerTimes ? (
                 <div className="flex flex-col gap-2 text-left">
                     {[
-                        { name: 'Fajr', icon: './public/sunrise@2x.png' },
-                        { name: 'Duhr', icon: './public/sunrise-1@2x.png' },
-                        { name: 'Asr', icon: './public/sun@2x.png' },
-                        { name: 'Maghrib', icon: './public/sun@2x.png' },
-                        { name: 'Isha', icon: './public/sunrise@2x.png' }
+                        { name: 'Fajr', icon: '/sunrise@2x.png' },
+                        { name: 'Duhr', icon: '/sunrise-1@2x.png' },
+                        { name: 'Asr', icon: '/sun@2x.png' },
+                        { name: 'Maghrib', icon: '/sun@2x.png' },
+                        { name: 'Isha', icon: '/sunrise@2x.png' }
                     ].map((prayer, index) => (
                         <div key={index} className="grid grid-cols-3 items-center mb-2">
                             <div className="flex items-center gap-2">

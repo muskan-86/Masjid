@@ -11,7 +11,7 @@ const Footer = () => {
             <div className="flex flex-col w-full bg-slate-200  p-10">
                 <div className="flex flex-row flex-wrap sm:flex-nowrap justify-around items-center gap-10 w-full bg-slate-200">
                     <div className="flex flex-col items-start">
-                        <img className="h-24 my-4" loading="lazy" alt="Logo" src="./public/bilallogohighresolution-1@2x.png" />
+                        <img className="h-24 my-4" loading="lazy" alt="Logo" src="/bilallogohighresolution-1@2x.png" />
                         <div className="my-4 flex flex-col gap-2">
                             <p>Address: 4115 SW 160th Beaverton, OR 97008</p>
                             <p>Email: bilalmasjid@bilalmasjid.com</p>
@@ -32,17 +32,17 @@ const Footer = () => {
                             <div className="flex gap-3">
                                 <div className="bg-mediumseagreen-300 rounded-full w-8 h-8">
                                     <a href="https://web.facebook.com/bilalmasjidbeaverton?_rdc=1&_rdr" target="_blank" rel="noopener noreferrer">
-                                        <img src="./public/Facebook-icon.png" alt="facebook icon" />
+                                        <img src="/Facebook-icon.png" alt="facebook icon" />
                                     </a>
                                 </div>
                                 <div className="bg-mediumseagreen-300 rounded-full w-8 h-8">
                                     <a href="https://chat.whatsapp.com/B8c6ngDZTkBI8RBs6JHEgm" target="_blank" rel="noopener noreferrer">
-                                        <img src="./public/whatsapp-icon.svg" alt="whatsapp icon" />
+                                        <img src="/whatsapp-icon.svg" alt="whatsapp icon" />
                                     </a>
                                 </div>
                                 <div className="bg-mediumseagreen-300 rounded-full w-8 h-8">
                                     <a href="https://www.youtube.com/channel/UCYcsOfNe70UH_b65RdZmpRA" target="_blank" rel="noopener noreferrer">
-                                        <img src="./public/youtube-icon.png" className="p-1" alt="youtube icon" />
+                                        <img src="/youtube-icon.png" className="p-1" alt="youtube icon" />
                                     </a>
                                 </div>
                             </div>

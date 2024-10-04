@@ -27,20 +27,7 @@ const formatDateToMMDDYYYY = (dateString) => {
 };
 
 const EventsCalendar = () => {
-  const [events, setEvents] = useState([
-    // { title: "Ladies support group halaqa", start: "2024-08-12", color: "#009a53" },
-    // { title: "Sisters Tajweed Halaqah(English)", start: "2024-08-17", color: "#009a53" },
-    // { title: "Illustrated Tajweed (English)", start: "2024-08-17", color: "#009a53" },
-    // { title: "Ladies support group halaqa", start: "2024-08-19", color: "#009a53" },
-    // { title: "Ladies Quran Halaqa (Arabic speakers)", start: "2024-08-23", color: "#009a53" },
-    // { title: "Sisters Tajweed Halaqah(English)", start: "2024-08-24", color: "#009a53" },
-    // { title: "Illustrated Tajweed (English)", start: "2024-08-24", color: "#009a53" },
-    // { title: "Community Pot Lucks", start: "2024-08-24", color: "#009a53" },
-    // { title: "Ladies support group halaqa", start: "2024-08-26", color: "#009a53" },
-    // { title: "Imam Toures Quran Tafseer class", start: "2024-08-30", color: "#009a53" },
-    // { title: "Sisters Tajweed Halaqah(English)", start: "2024-08-31", color: "#009a53" },
-    // { title: "Illustrated Tajweed (English)", start: "2024-08-31", color: "#009a53" },
-  ]);
+  const [events, setEvents] = useState([]);
   const [firestoreEvents, setFirestoreEvents] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const calendarRef = useRef(null);
@@ -146,7 +133,7 @@ const allEvents = [...events, ...firestoreEvents];
             
           </div>
         </div>
-        {/* <p className="flex justify-center items-center mb-4">Request an Event at bilal masjid</p> */}
+       
 
         {/* Event Form */}
         {showForm && (
@@ -173,7 +160,7 @@ const allEvents = [...events, ...firestoreEvents];
       ref={calendarRef}
       plugins={[dayGridPlugin, timeGridPlugin]}
       initialView="dayGridMonth"
-      initialDate="2024-09-01"
+      initialDate="2024-10-01"
       headerToolbar={{
         left: "prev,next today",
         center: "title",

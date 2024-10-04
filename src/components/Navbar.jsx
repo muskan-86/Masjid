@@ -32,7 +32,7 @@ const Navbar = () => {
           {/* Mobile Menu Button */}
           <div className="lg:hidden md:hidden">
             <button onClick={toggleMobileMenu} id="menu-btn" className="block text-gray-800 focus:outline-none">
-              <img className="h-6 w-6" src="./public/Menu.png" />
+              <img className="h-6 w-6" src="/Menu.png" />
             </button>
           </div>
 
@@ -63,11 +63,11 @@ const Navbar = () => {
                 {/* Dropdown menu items */}
                 <a href="#" className="no-underline block px-4 py-2 text-black hover:bg-gray-100 flex items-center">
                   Janaza
-                  <img className="h-4 w-4 ml-6 inline-block" src="./public/address@2x.png" alt="Address" />
+                  <img className="h-4 w-4 ml-6 inline-block" src="/address@2x.png" alt="Address" />
                 </a>
                 <a href="#" className="no-underline block px-4 py-2 text-black hover:bg-gray-100 flex items-center">
                   Mosque
-                  <img className="h-4 w-4 ml-4 inline-block" src="./public/mosque@2x.png" alt="Mosque" />
+                  <img className="h-4 w-4 ml-4 inline-block" src="/mosque@2x.png" alt="Mosque" />
                 </a>
               </div>
 

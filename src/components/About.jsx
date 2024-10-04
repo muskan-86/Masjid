@@ -58,7 +58,7 @@ const About = () => {
               >
                 <img
                   className="object-contain"
-                  src="./public/Ramadan.png"
+                  src="/Ramadan.png"
                   alt="Sun Icon"
                   style={{ width: '40px', height: '40px' }}
                 />
@@ -70,7 +70,7 @@ const About = () => {
               >
                 <img
                   className="object-contain"
-                  src="./public/Praying Man.png"
+                  src="/Praying Man.png"
                   alt="Sun Icon"
                   style={{ width: '40px', height: '40px' }}
                 />
@@ -82,7 +82,7 @@ const About = () => {
               >
                 <img
                   className="object-contain"
-                  src="./public/Donate.png"
+                  src="/Donate.png"
                   alt="Sun Icon"
                   style={{ width: '40px', height: '40px' }}
                 />
@@ -94,7 +94,7 @@ const About = () => {
               >
                 <img
                   className="object-contain"
-                  src="./public/Crescent City.png"
+                  src="/Crescent City.png"
                   alt="Sun Icon"
                   style={{ width: '40px', height: '40px' }}
                 />
@@ -106,7 +106,7 @@ const About = () => {
               >
                 <img
                   className="object-contain"
-                  src="./public/Mosque.png"
+                  src="/Mosque.png"
                   alt="Sun Icon"
                   style={{ width: '40px', height: '40px' }}
                 />
@@ -232,9 +232,6 @@ const About = () => {
             </div>
           </div>
         </section>
-
-       
-       
       </div>
        {/* footer */}
        <div>

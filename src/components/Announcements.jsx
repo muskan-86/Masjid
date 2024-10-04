@@ -20,7 +20,7 @@ const SamplePrevArrow = (props) => {
              borderRadius: "50%", width: "20px", height: "20px", left: '2px', zIndex: 1, cursor: 'pointer' }} onClick={onClick}></div>
     );
 };
-const Announcements = ({ onClose }) => {
+const Announcements = () => {
   const { announcements, fetchAnnouncements } = useAnnouncements(); // Access fetchAnnouncements
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -74,7 +74,7 @@ const Announcements = ({ onClose }) => {
           </div>
         <div className="fixed inset-0  flex items-center justify-center z-50">
             <div className="bg-white p-4 rounded-lg shadow-lg max-w-sm relative mx-4">
-                {/* <button onClick={onClose} className="absolute top-2 right-2 text-gray-600 text-3xl">&times;</button> */}
+               
                 <Slider {...settings}>
                     {announcements.length > 0 ? (
                         announcements.map((announcement) => (
