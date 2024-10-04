@@ -11,7 +11,7 @@ import ApprovedEvents from "./components/ApprovedEvents";
 import DeniedEvents from "./components/DeniedEvents"; 
 import AnnouncementUpdate from "./components/AnnouncementUpdate.jsx";
 import { AnnouncementProvider } from './context/AnnouncementContext'; 
-import PrayerTimeUploader from './components/PrayerTimeUploader'; // Corrected import
+import PrayerTimeUploader from './components/PrayerTimeUploader';
 import ProtectedRoute from './components/ProtectedRoute';
 import EventDetails from "./components/EventDetails";
 import KhateebSchedule from "./components/KhateebSchedule.jsx";

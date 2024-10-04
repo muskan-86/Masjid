@@ -34,7 +34,6 @@ const About = () => {
      < WhatsAppButton/>
         {/* Hero Section */}
           <AboutHeroSection/>
-
         {/* Hero Section End */}
         {/* Prayer Section */}
         <div>
