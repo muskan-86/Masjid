@@ -172,7 +172,7 @@ const PrayerTimes = () => {
     };
 
     return (
-        <div className="flex flex-col w-[400] h-auto  bg-mediumseagreen-300 mt-6 sm:mt-8 md:mt-10 text-white rounded-xl py-4 px-4 sm:px-6 md:py-28 md:px-16 relative">
+        <div className="flex flex-col w-[400] h-auto  bg-mediumseagreen-300 mt-6 sm:mt-8 md:mt-10 text-white rounded-xl py-4 px-4 sm:px-6 relative">
             <div className="text-center">
                 <div className="flex items-center justify-between mt-8 mb-4">
                     <div></div>

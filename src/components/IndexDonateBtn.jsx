@@ -6,7 +6,7 @@ const   IndexDonateBtn = () => {
                   data-aos="fade-in">
                   <a href="https://us.mohid.co/or/portland/bma/masjid/online/donation">Donate</a>
 
-                  <img class="h-5 w-5" src="/back-arrow-3@2x.png" alt="Arrow Icon" />
+                  <img className="h-5 w-5" src="/back-arrow-3@2x.png" alt="Arrow Icon" />
                 </button>
     );
   };

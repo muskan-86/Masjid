@@ -13,9 +13,9 @@ import AnnouncementPopup from './AnnouncementPopup.jsx';
 import "./home.css";
 import { useEffect, useState } from "react";
 import AOS from "aos";
-import "aos/dist/aos.css"; // Import AOS styles
+import "aos/dist/aos.css"; 
 import PrayerTimes from './PrayerTimes.jsx';
-// import KhateebSchedulePopup from './KhateebSchedulePopup'; 
+ 
 const HomePage = () => {
   const [loading, setLoading] = useState(true); // State to track loader status
   const [isAnnouncementOpen, setIsAnnouncementOpen] = useState(false);
@@ -53,9 +53,6 @@ const HomePage = () => {
 
         {!loading && <WhatsAppButton />}
 
-        
-
-
         {/* hero Section*/}
         <div className="mt-2 font-noto-sans">
           {/* Displayed on large screens */}
@@ -64,7 +61,7 @@ const HomePage = () => {
               {/* Left Section: Welcome Message */}
               <div className="flex flex-col w-1/3 gap-4 items-start mt-10 justify-center text-left p-2">
                 <div className="my-4 w-full">
-                  <h2 className="font-black text-4xl text-left" data-aos="fade-down">
+                  <h2 className="font-black text-3xl text-left" data-aos="fade-down">
                     Welcome to Bilal Masjid
                   </h2>
                 </div>
@@ -100,12 +97,12 @@ const HomePage = () => {
           </div>
 
           {/* Displayed on small/medium screens */}
-          <div className="hidden-on-desktop lg:hidden flex flex-col py-12 items-center bg-cover bg-center p-4 bg-white">
+          <div className="hidden-on-desktop lg:hidden flex flex-col items-center bg-cover bg-center p-4 bg-white">
             <div className="relative z-20 flex flex-col justify-start max-w-full ">
               {/* Left Section: Welcome Message */}
-              <div className="flex flex-col gap-4 items-start mt-10 justify-center text-left max-w-full p-2 mx-10">
+              <div className="flex flex-col gap-4 items-start justify-center text-left max-w-full p-2 mx-10">
                 <div className="my-4 w-full">
-                  <h2 className="font-black text-3xl text-left" data-aos="fade-down">
+                  <h2 className="font-black text-xl text-left" data-aos="fade-down">
                     Welcome to Bilal Masjid
                   </h2>
                 </div>
@@ -143,9 +140,9 @@ const HomePage = () => {
         </div>
         {/* Hero Section ends here */}
         {/* Upcoming Events Button */}
-        <div className="flex flex-col justify-center items-center max-w-full gap-5 mt-8 z-40">
+        <div className="flex flex-col justify-center items-center max-w-full gap-5 mt-2 z-40">
           <div
-            className="mb-5 relative w-screen h-60 flex justify-center"
+            className=" relative w-screen h-60 flex justify-center"
             style={{ backgroundImage: `url('/background.png')` }}
           >
             <div className="absolute inset-0 bg-white opacity-75"></div> {/* Background Overlay */}
@@ -153,23 +150,22 @@ const HomePage = () => {
               <button
                 className="bg-white rounded-full border-4 border-green-600 px-6 py-2 text-green-600 font-medium text-2xl font-sans"
                 data-aos="fade-in" data-aos-duration="1500" data-aos-delay="500"
-                onClick={() => setShowPopup(true)} // Show popup on button click
               >
                 Upcoming Events
               </button>
             </div>
           </div>
-          <div className="mt-10">
+          <div className="mt-4">
             <Event />
           </div>
 
           {/* Services */}
-          <div className="flex flex-col justify-around items-center gap-5 my-5">
+          <div className="flex flex-col justify-around items-center gap-5 mt-8 mb-5">
             <div
               className="relative w-full h-60 flex justify-center mx-72 px-96"
               style={{ backgroundImage: `url('/background.png')` }}
             >
-              <div className="absolute inset-0 bg-white opacity-75"></div> {/* Background Overlay */}
+              <div className="absolute inset-0 bg-white opacity-75"></div> 
               <div className="flex justify-center items-center max-w-full my-12 font-serif z-20">
                 <button
                   className="bg-white rounded-full border-4 border-green-600 px-8 py-2 text-green-600 font-medium text-2xl font-sans"

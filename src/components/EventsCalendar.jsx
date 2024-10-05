@@ -155,7 +155,7 @@ const allEvents = [...events, ...firestoreEvents];
         {/* Calendar and Event List */}
         <div id="calendar-and-list" className="flex justify-center lg:flex-row md:flex-row gap-4 md:gap-8 m-10">
   {/* Calendar Container */}
-  <div className="w-full max-h-screen md:w-2/4 lg:w-2/3 xl:w-1/2 mx-auto overflow-y-auto">
+  <div className="w-full max-h-screen md:w-2/4 lg:w-2/3 xl:w-1/2 overflow-y-auto">
     <FullCalendar
       ref={calendarRef}
       plugins={[dayGridPlugin, timeGridPlugin]}
@@ -173,7 +173,7 @@ const allEvents = [...events, ...firestoreEvents];
   </div>
 
   {/* Event List Container */}
-  <div className="w-full md:w-1/3 lg:w-1/3 xl:w-1/4 bg-slate-200 p-4 rounded">
+  <div className="w-full md:w-1/3 lg:w-1/3 xl:w-2/4 bg-slate-200 p-4 rounded">
     {allEvents.length > 0 && (
       <div>
         <h2 className="text-xl font-semibold mb-2 pl-5">Event List</h2>
