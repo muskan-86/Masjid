@@ -1,8 +1,7 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState } from 'react';
 import Slider from "react-slick";
 import { useAnnouncements } from '../context/AnnouncementContext';
 import Navbar from "./Navbar.jsx";
-
 
 const SampleNextArrow = (props) => {
     const { className, style, onClick } = props;
@@ -21,14 +20,9 @@ const SamplePrevArrow = (props) => {
     );
 };
 const Announcements = () => {
-  const { announcements, fetchAnnouncements } = useAnnouncements(); // Access fetchAnnouncements
-  const [currentSlide, setCurrentSlide] = useState(0);
-
-  useEffect(() => {
-      fetchAnnouncements(); // Fetch announcements when the popup is opened
-      setCurrentSlide(0); // Reset slide to first when popup opens
-  }, []);
-
+    const { announcements } = useAnnouncements();
+    const [currentSlide, setCurrentSlide] = useState(0);
+   
     const settings = {
         dots: true,
         infinite: true,
@@ -55,42 +49,34 @@ const Announcements = () => {
     };
 
     // Function to determine the dot color based on the slide index
-    const getDotColor = (index) => {
-        switch (index) {
-            case 0:
-                return "#10B981"; // Tailwind color for first image
-            case 1:
-                return "#10B981"; // Tailwind color for second image
-            case 2:
-                return "#10B981"; // Tailwind color for third image
-            default:
-                return "gray";
-        }
+    const getDotColor = (i) => {
+        return "#10B981"; // Tailwind color for active dots
     };
     return (
         <div>
-          <div>
-            <Navbar/>
-          </div>
-        <div className="fixed inset-0  flex items-center justify-center z-50">
-            <div className="bg-white p-4 rounded-lg shadow-lg max-w-sm relative mx-4">
-               
+            <div>
+                <Navbar/>
+            </div>
+            <div className="fixed inset-0 flex items-center justify-center  bg-opacity-50 z-50">
+            <div className="bg-white p-4 rounded-lg shadow-md w-11/12 max-w-sm mx-4 relative">
                 <Slider {...settings}>
-                    {announcements.length > 0 ? (
-                        announcements.map((announcement) => (
-                            <div key={announcement.id} className='w-70 rounded-lg'>
-                                <div className="relative flex flex-col items-center justify-center">
-                                    <img className="h-72 rounded-2xl max-w-md object-cover mb-4" src={announcement.imageUrl} alt={announcement.title} />
-                                </div>
+                {announcements.length > 0 ? (
+                    announcements.map((announcement) => (
+                        <div key={announcement.id} className=" w-70 rounded-lg">
+                            {/* <p className="font-bold">{announcement.title}</p> */}
+                            <div className="relative flex flex-col items-center justify-center">
+                            <img src={announcement.imageUrl} alt={announcement.title} className="h-72 rounded-2xl max-w-md object-cover mb-4" />
                             </div>
-                        ))
-                    ) : (
-                        <div className="text-center">No announcements available.</div>
-                    )}
-                </Slider>
+                        </div>
+                    ))
+                ) : (
+                    <p className="text-center text-gray-500">No announcements available.</p>
+                )}
+                </Slider> 
             </div>
         </div>
         </div>
+       
     );
 };
 

@@ -43,12 +43,9 @@ const HomePage = () => {
           <Navbar />
         </div>
 
-        <div className="relative gap-2">
+        <div className="relative gap-4">
           {/* Other components */}
-          {!loading && <AnnouncementButton onClick={() => setIsAnnouncementOpen(true)} />}
-          {isAnnouncementOpen && (
-            <AnnouncementPopup onClose={() => setIsAnnouncementOpen(false)} />
-          )}
+          {!loading && <AnnouncementButton/>}
         </div>
 
         {!loading && <WhatsAppButton />}

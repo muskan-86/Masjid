@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import Slider from 'react-slick';
+// AnnouncementPopup.jsx
+import { useState } from 'react';
+import React from 'react';
 import { useAnnouncements } from '../context/AnnouncementContext';
+import Slider from "react-slick";
 
 const SampleNextArrow = (props) => {
     const { className, style, onClick } = props;
@@ -18,23 +20,10 @@ const SamplePrevArrow = (props) => {
              borderRadius: "50%", width: "20px", height: "20px", left: '2px', zIndex: 1, cursor: 'pointer' }} onClick={onClick}></div>
     );
 };
-
-const AnnouncementPopup = ({ onClose }) => {
-    const { announcements, fetchAnnouncements } = useAnnouncements(); 
+const AnnouncementPopup = ({ isOpen, onClose }) => {
+    const { announcements } = useAnnouncements();
     const [currentSlide, setCurrentSlide] = useState(0);
-    const [loading, setLoading] = useState(true); // Add loading state
-
-    // Fetch announcements when popup opens and reset the current slide
-    useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true); // Start loading
-            await fetchAnnouncements();
-            setLoading(false); // Stop loading once data is fetched
-            setCurrentSlide(0); // Reset to the first slide
-        };
-        fetchData();
-    }, []);
-
+    if (!isOpen) return null; // Don't render if not open
     const settings = {
         dots: true,
         infinite: true,
@@ -54,48 +43,36 @@ const AnnouncementPopup = ({ onClose }) => {
                     background: i === currentSlide ? getDotColor(i) : "gray", 
                     borderRadius: "50%",
                     transition: 'background-color 0.3s ease',
+                    
                 }}
             />
         ),
     };
 
     // Function to determine the dot color based on the slide index
-    const getDotColor = (index) => {
-        switch (index) {
-            case 0:
-                return "#10B981"; // Tailwind color for first image
-            case 1:
-                return "#10B981"; // Tailwind color for second image
-            case 2:
-                return "#10B981"; // Tailwind color for third image
-            default:
-                return "gray";
-        }
+    const getDotColor = (i) => {
+        return "#10B981"; // Tailwind color for active dots
     };
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white p-4 rounded-lg shadow-lg max-w-sm relative mx-4">
-                <button onClick={() => { setCurrentSlide(0); onClose(); }} className="absolute top-2 right-2 text-gray-600 text-3xl">&times;</button>
-                
-                {/* Show loader until announcements are fetched */}
-                {loading ? (
-                    <div className="text-center p-4">Loading announcements...</div>
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div className="bg-white p-4 rounded-lg shadow-md w-11/12 max-w-sm mx-4 relative">
+                <button onClick={onClose} className="absolute top-2 right-2 text-gray-600 text-3xl">&times;</button>
+                <Slider {...settings}>
+                {announcements.length > 0 ? (
+                    announcements.map((announcement) => (
+                        <div key={announcement.id} className=" w-70 rounded-lg">
+                            {/* <p className="font-bold">{announcement.title}</p> */}
+                            <div className="relative flex flex-col items-center justify-center">
+                            <img src={announcement.imageUrl} alt={announcement.title} className="h-72 rounded-2xl max-w-md object-cover mb-4" />
+                            </div>
+                        </div>
+                    ))
                 ) : (
-                    <Slider {...settings}>
-                        {announcements.length > 0 ? (
-                            announcements.map((announcement) => (
-                                <div key={announcement.id} className='w-70 rounded-lg'>
-                                    <div className="relative flex flex-col items-center justify-center">
-                                        <img className="h-72 rounded-2xl max-w-md object-cover mb-4" src={announcement.imageUrl} alt={announcement.title} />
-                                    </div>
-                                </div>
-                            ))
-                        ) : (
-                            <div className="text-center">No announcements available.</div>
-                        )}
-                    </Slider>
+                    <p className="text-center text-gray-500">No announcements available.</p>
                 )}
+                </Slider>
+                
             </div>
         </div>
     );

@@ -7,7 +7,6 @@ const AnnouncementContext = createContext();
 export const AnnouncementProvider = ({ children }) => {
     const [announcements, setAnnouncements] = useState([]);
 
-    // Function to fetch announcements from Firestore
     const fetchAnnouncements = async () => {
         try {
             const querySnapshot = await getDocs(collection(db, 'announcements'));

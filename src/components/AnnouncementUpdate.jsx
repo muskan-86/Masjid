@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '../firebase-config'; 
 import { collection, getDocs, addDoc, deleteDoc, doc } from 'firebase/firestore'; 
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'; // Import necessary functions
 import BackButton from './BackButton';
 import { useAnnouncements } from '../context/AnnouncementContext';
 
@@ -33,6 +34,7 @@ const AnnouncementUpdate = () => {
     const uploadImage = async () => {
         if (!imageFile) return;
 
+        const storage = getStorage(); // Initialize storage here
         const storageRef = ref(storage, `announcements/${imageFile.name}`);
         await uploadBytes(storageRef, imageFile);
         const url = await getDownloadURL(storageRef);
@@ -57,7 +59,6 @@ const AnnouncementUpdate = () => {
             alert('Please provide both a title and an image.');
         }
     };
-    
 
     const handleDeleteAnnouncement = async (id) => {
         // Delete announcement from Firestore

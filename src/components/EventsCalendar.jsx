@@ -13,7 +13,7 @@ import Navbar from "./Navbar";
 import EventForm from "./EventForm";
 import WhatsAppButton from "./WhatsAppButton.jsx";
 import AnnouncementButton from './AnnouncementButton.jsx';
-import AnnouncementPopup from './AnnouncementPopup.jsx';
+
 
 
 const formatDateToMMDDYYYY = (dateString) => {
@@ -32,7 +32,6 @@ const EventsCalendar = () => {
   const [showForm, setShowForm] = useState(false);
   const calendarRef = useRef(null);
   const [loading, setLoading] = useState(true); // State to track loader status
-  const [isAnnouncementOpen, setIsAnnouncementOpen] = useState(false);
   const navigate = useNavigate();
 
 
@@ -98,14 +97,7 @@ const allEvents = [...events, ...firestoreEvents];
         </div>
         <div className="relative gap-2">
         {/* Other components */}
-        {!loading && <AnnouncementButton onClick={() => setIsAnnouncementOpen(true)} />}
-        
-
-        {isAnnouncementOpen && (
-          <AnnouncementPopup 
-            onClose={() => setIsAnnouncementOpen(false)}
-          />
-        )}
+        {!loading && <AnnouncementButton/>}
       </div>
       {!loading && < WhatsAppButton/>}
         {/* Calendar */}

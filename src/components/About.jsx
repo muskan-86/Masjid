@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import DonateButton from './DonateButton';
 import ApplyButton from './ApplyBtn';
 import ProcessButton from './ProcessBtn';
@@ -8,30 +8,21 @@ import Navbar from "./Navbar";
 import AboutHeroSection from './AboutHeroSection';
 import WhatsAppButton from "./WhatsAppButton.jsx";
 import AnnouncementButton from './AnnouncementButton.jsx';
-import AnnouncementPopup from './AnnouncementPopup.jsx';
 import"./output.css"
-const About = () => {
- 
-  const [isAnnouncementOpen, setIsAnnouncementOpen] = useState(false);
 
+const About = () => {
   return (
     <div className="font-noto-sans overflow-x-hidden">
       <div className="flex flex-col justify-center items-center font-noto-sans text-black">
-      
+      <div className="relative gap-2">
+        {/* Other components */}
+        <AnnouncementButton  />
+      </div>
+     < WhatsAppButton/>
         <div className='w-full'>
           <Navbar />
         </div>
-        <div className="relative gap-2">
-        {/* Other components */}
-        <AnnouncementButton onClick={() => setIsAnnouncementOpen(true)} />
-        {isAnnouncementOpen && (
-          <AnnouncementPopup 
-            onClose={() => setIsAnnouncementOpen(false)}
-          />
-        )}
-      
-      </div>
-     < WhatsAppButton/>
+       
         {/* Hero Section */}
           <AboutHeroSection/>
         {/* Hero Section End */}
