@@ -1,15 +1,55 @@
 import React, { useEffect, useState } from 'react';
 import Papa from 'papaparse';
 import { getStorage, ref, listAll, getDownloadURL } from 'firebase/storage';
+import { db } from '../firebase-config'; 
 import { getFirestore, collection, getDocs } from "firebase/firestore";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
-import BackButton from './BackButton';
+
 
 const PrayerTimes = () => {
     const [todayPrayerTimes, setTodayPrayerTimes] = useState(null);
     const [csvDownloadURL, setCsvDownloadURL] = useState('');
-    const [khateebScheduleImage, setKhateebScheduleImage] = useState('');
+    const [khateebScheduleFile, setKhateebScheduleFile] = useState('');
+    const [pdfs, setPdfs] = useState([]);
+
+
+    useEffect(() => {
+        const fetchPdfs = async () => {
+            try {
+                const pdfCollection = collection(db, 'prayer_pdfs'); // Your Firestore collection name
+                const pdfSnapshot = await getDocs(pdfCollection);
+                const pdfList = pdfSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                setPdfs(pdfList);
+            } catch (error) {
+                console.error("Error fetching PDFs:", error);
+            }
+        };
+
+        fetchPdfs();
+    }, []);
+
+    const handleDownload = async (pdf) => {
+        if (!pdf.url) {
+            console.error("URL is not valid:", pdf.url);
+            return;
+        }
+
+        try {
+            const response = await fetch(pdf.url);
+            if (!response.ok) throw new Error('Network response was not ok');
+            const blob = await response.blob(); // Create a blob from the response
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob); // Create a URL for the blob
+            link.download = pdf.name; // Use the name from the PDF object
+            document.body.appendChild(link);
+            link.click(); // Programmatically click the link to trigger the download
+            document.body.removeChild(link); // Remove the link from the DOM
+        } catch (error) {
+            console.error("Download error:", error);
+        }
+    };
+
 
     const fetchPrayerTimes = async () => {
         try {
@@ -77,38 +117,6 @@ const PrayerTimes = () => {
     }, []);
 
 
-    const openCSVInNewTab = async () => {
-        try {
-            const response = await fetch(csvDownloadURL.url);
-            const text = await response.text();
-            const newTab = window.open('', '_blank');
-
-            if (newTab) {
-                const downloadLink = `<a href="${csvDownloadURL.url}" download="${csvDownloadURL.fileName}" style=" padding: 10px; margin-bottom:4px; background-color: #4CAF50; color: white; text-decoration: none; text-align: center; border-radius: 5px;">Download</a>`;
-                const parsedData = Papa.parse(text, { header: true });
-                const csvTable = createHTMLTable(parsedData.data);
-
-                newTab.document.write(`
-                    <html>
-                        <head>
-                            <title>Prayer Schedule</title>
-                        </head>
-                        <body>
-                            <h1>Prayer Schedule</h1>
-                            ${csvTable}
-                            ${downloadLink}
-                        </body>
-                    </html>
-                `);
-                newTab.document.close();
-            }
-        } catch (error) {
-            console.error('Error opening CSV in new tab:', error);
-        }
-    };
-
-
-
     const createHTMLTable = (data) => {
         let table = '<table style="width:100%; border-collapse: collapse; margin: 20px 0;">';
         table += '<thead><tr>';
@@ -139,47 +147,94 @@ const PrayerTimes = () => {
             const db = getFirestore();
             const khateebCollection = collection(db, 'khateeb_schedule');
             const snapshot = await getDocs(khateebCollection);
-            const latestDoc = snapshot.docs[snapshot.docs.length - 1]; // Get the last document added
-            if (latestDoc) {
-                const imageUrl = latestDoc.data().imageURL; // Ensure 'imageURL' exists in Firestore
-                setKhateebScheduleImage(imageUrl);
+    
+            console.log('Documents found:', snapshot.docs.length); // Check document count
+    
+            if (snapshot.docs.length > 0) {
+                // Loop through documents to find a valid file URL
+                let validFileUrl = null;
+                snapshot.docs.forEach(doc => {
+                    const data = doc.data();
+                    console.log('Document data:', data); // Log the document data
+                    if (data.fileURL) {
+                        validFileUrl = data.fileURL; // Assign the first valid file URL found
+                    }
+                });
+    
+                if (validFileUrl) {
+                    console.log('Fetched file URL:', validFileUrl); // Log the fetched URL
+                    setKhateebScheduleFile(validFileUrl);
+                } else {
+                    console.warn('No valid file URL found in documents!');
+                    setKhateebScheduleFile(null);
+                }
             } else {
-                console.error('No documents found in khateeb_schedule!');
+                console.warn('No documents found in khateeb_schedule!');
+                setKhateebScheduleFile(null);
             }
         } catch (error) {
             console.error('Error fetching Khateeb schedule:', error);
         }
     };
+    
 
-    const openKhateebScheduleInNewTab = () => {
-        if (khateebScheduleImage) {
-            const newTab = window.open('', '_blank');
+    const openKhateebScheduleInNewTab = async () => {
+        try {
+            // Fetch the CSV file from the provided URL
+            const response = await fetch(khateebScheduleFile); // Use the URL from your state
+            const text = await response.text();
+            const newTab = window.open('', '_blank'); // Open a new tab
+    
             if (newTab) {
+                const parsedData = Papa.parse(text, { header: true }); // Parse CSV data
+                const csvTable = createHTMLTable(parsedData.data); // Create HTML table from parsed data
+    
+                // Write the HTML content to the new tab without the download link
                 newTab.document.write(`
                     <html>
                         <head>
                             <title>Khateeb Schedule</title>
+                            <style>
+                                body { font-family: Arial, sans-serif; }
+                                table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                                th, td { border: 1px solid #ddd; padding: 8px; }
+                                th { background-color: #f2f2f2; }
+                            </style>
                         </head>
                         <body>
                             <h1>Khateeb Schedule</h1>
-                            <img src="${khateebScheduleImage}" alt="Khateeb Schedule" style="max-width: 100%; height: auto;"/>
+                            ${csvTable}
                         </body>
                     </html>
                 `);
-                newTab.document.close();
+                newTab.document.close(); // Close the document for rendering
             }
+        } catch (error) {
+            console.error('Error opening Khateeb schedule in new tab:', error);
         }
     };
+    
+   
 
     return (
         <div className="flex flex-col w-[400] h-auto  bg-mediumseagreen-300 mt-6 sm:mt-8 md:mt-10 text-white rounded-xl py-4 px-4 sm:px-6 relative">
             <div className="text-center">
                 <div className="flex items-center justify-between mt-8 mb-4">
-                    <div></div>
+                    <div>
+                        {/* for spacing */}
+                    </div>
                     <button className="bg-white text-mediumseagreen-300  item-center font-bold py-2 px-4 rounded-full">
                         Prayer Times
                     </button>
-                    {csvDownloadURL && (
+                    {pdfs.map(pdf => (
+                    <li key={pdf.id} className="mb-2 flex items-center">
+                       
+                        <a onClick={() => handleDownload(pdf)}>
+                            <FontAwesomeIcon icon={faCalendar} className="text-white" />
+                        </a>
+                    </li>
+                ))}
+                    {/* {csvDownloadURL && (
                         <a
                             onClick={openCSVInNewTab}
                             className=" cursor-pointer"
@@ -187,7 +242,7 @@ const PrayerTimes = () => {
                         >
                             <FontAwesomeIcon icon={faCalendar} className="text-white" />
                         </a>
-                    )}
+                    )} */}
                 </div>
             </div>
 

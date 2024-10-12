@@ -2,17 +2,23 @@ import React, { useState, useEffect } from 'react';
 import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "firebase/firestore";
 import BackButton from './BackButton';
+
 const KhateebSchedule = () => {
     const [file, setFile] = useState(null);
     const [uploading, setUploading] = useState(false);
-    const [images, setImages] = useState([]);
-    
+    const [uploadedFile, setUploadedFile] = useState(null);
+
     const storage = getStorage();
     const firestore = getFirestore();
 
     const handleFileChange = (e) => {
-        setFile(e.target.files[0]);
-        setFile(e.target.files[0]);
+        const selectedFile = e.target.files[0];
+        if (selectedFile && selectedFile.type === "text/csv") {
+            setFile(selectedFile);
+        } else {
+            alert("Please upload a valid CSV file.");
+            setFile(null);
+        }
     };
 
     const handleUpload = async () => {
@@ -24,77 +30,89 @@ const KhateebSchedule = () => {
         try {
             await uploadBytes(storageRef, file);
             const url = await getDownloadURL(storageRef);
-            // Add a new document in Firestore with the image URL
-            await addDoc(collection(firestore, 'khateeb_schedule'), {
-                imageURL: url,
-                uploadedAt: new Date()
+            // Add a new document in Firestore with the CSV file URL
+            const docRef = await addDoc(collection(firestore, 'khateeb_schedule'), {
+                fileURL: url,
+                uploadedAt: new Date(),
+                fileName: file.name
             });
+            setUploadedFile({ id: docRef.id, fileURL: url, fileName: file.name });
+            setFile(null); // Clear the file after upload
             setUploading(false);
-            fetchImages(); // Refresh images after upload
         } catch (error) {
             console.error('Error uploading file:', error);
             setUploading(false);
         }
     };
 
-    const fetchImages = async () => {
-        const imagesCollection = await getDocs(collection(firestore, 'khateeb_schedule'));
-        const imagesList = imagesCollection.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-        }));
-        setImages(imagesList);
-    };
-
-    const handleDelete = async (id, imageURL) => {
-        const imageRef = ref(storage, imageURL); // Reference to the image in storage
+    const handleDelete = async (id, fileURL) => {
+        const fileRef = ref(storage, fileURL); // Reference to the file in storage
         try {
-            // Delete image from Firebase Storage
-            await deleteObject(imageRef);
-            // Delete document from Firestore
+            // Delete the file from Firebase Storage
+            await deleteObject(fileRef);
+            // Delete the document from Firestore
             await deleteDoc(doc(firestore, 'khateeb_schedule', id));
-            fetchImages(); // Refresh images after delete
+            setUploadedFile(null); // Clear uploaded file state
         } catch (error) {
             console.error('Error deleting file:', error);
         }
     };
 
     useEffect(() => {
-        fetchImages(); // Fetch images on component mount
+        const fetchUploadedFile = async () => {
+            const filesCollection = await getDocs(collection(firestore, 'khateeb_schedule'));
+            const filesList = filesCollection.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+            if (filesList.length > 0) {
+                setUploadedFile(filesList[0]); // Assume only one file is allowed
+            }
+        };
+
+        fetchUploadedFile(); // Fetch uploaded file on component mount
     }, []);
 
     return (
-        <div className='mt-2'> 
-            <BackButton/>
-        <div className="flex flex-col items-center mt-4">
-            <h1 className="text-lg font-bold mb-4">Upload Khateeb Schedule</h1>
-            <div className="bg-white p-4 rounded-lg shadow-lg max-w-sm relative mx-4">
-            <input type="file" onChange={handleFileChange} className="mb-4" />
-            <button 
-                onClick={handleUpload} 
-                className="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600"
-                disabled={uploading}
-            >
-                {uploading ? 'Uploading...' : 'Upload'}
-            </button>
-            </div>
-            <div className="mt-6">
-                <h2 className="text-lg font-bold">Uploaded Images</h2>
-                <div className="flex flex-col gap-4 mt-4">
-                    {images.map((image) => (
-                        <div key={image.id} className="flex flex-col items-center">
-                            <img src={image.imageURL} alt="Khateeb Schedule" className="mt-2 max-w-xs" />
-                            <button 
-                                onClick={() => handleDelete(image.id, image.imageURL)}
-                                className="mt-2 bg-red-500 text-white px-4 py-2 rounded"
+        <div className='mt-2'>
+            <BackButton />
+            <div className="flex flex-col items-center mt-4">
+                <h1 className="text-lg font-bold mb-4">Upload Khateeb Schedule (CSV)</h1>
+                <div className="bg-white p-4 rounded-lg shadow-lg max-w-sm relative mx-4">
+                    {/* Always show the file input, but disable it if a file is uploaded */}
+                    <input
+                        type="file"
+                        accept=".csv"
+                        onChange={handleFileChange}
+                        className="mb-4"
+                        disabled={uploadedFile !== null}
+                    />
+                    <button
+                        onClick={handleUpload}
+                        className="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600"
+                        disabled={uploading || !file || uploadedFile !== null}
+                    >
+                        {uploading ? 'Uploading...' : 'Upload CSV'}
+                    </button>
+                </div>
+
+                {/* Show uploaded file details and delete button */}
+                {uploadedFile && (
+                    <div className="mt-6">
+                        <h2 className="text-lg font-bold">Uploaded CSV File</h2>
+                        <div className="flex items-center mt-2"> {/* Change flex-col to flex */}
+                            <p className="mr-4">{uploadedFile.fileName}</p> {/* Add margin to the right */}
+                            <button
+                                onClick={() => handleDelete(uploadedFile.id, uploadedFile.fileURL)}
+                                className="text-red-500 hover:text-red-700"
                             >
                                 Delete
                             </button>
                         </div>
-                    ))}
-                </div>
+                    </div>
+                )}
+
             </div>
-        </div>
         </div>
     );
 };

@@ -10,9 +10,10 @@ const AnnouncementButton = () => {
     };
 
     const handleClosePopup = () => {
-        setIsPopupOpen(false);
-    };
-
+      console.log("Close button clicked");
+      setIsPopupOpen(false);
+  };
+  
     return (
         <div>
             <button

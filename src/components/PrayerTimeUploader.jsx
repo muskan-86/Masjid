@@ -5,16 +5,21 @@ import { ref, uploadBytes, listAll, getDownloadURL, deleteObject } from 'firebas
 import BackButton from './BackButton';
 
 const PrayerTimeUploader = () => {
-    const [file, setFile] = useState(null);
+    const [csvFile, setCsvFile] = useState(null);
+    const [pdfFile, setPdfFile] = useState(null);
     const [message, setMessage] = useState('');
-    const [uploadedFiles, setUploadedFiles] = useState([]);
-    const [isUploading, setIsUploading] = useState(false); // State to track upload status
+    const [uploadedCsvFiles, setUploadedCsvFiles] = useState([]);
+    const [uploadedPdfFiles, setUploadedPdfFiles] = useState([]);
+    const [isUploadingCsv, setIsUploadingCsv] = useState(false); 
+    const [isUploadingPdf, setIsUploadingPdf] = useState(false); 
 
     useEffect(() => {
-        fetchUploadedFiles(); // Fetch uploaded files on component mount
+        fetchUploadedCsvFiles(); // Fetch uploaded CSV files on component mount
+        fetchUploadedPdfFiles(); // Fetch uploaded PDF files on component mount
     }, []);
 
-    const fetchUploadedFiles = async () => {
+    // Fetch uploaded CSV files from Firebase Storage
+    const fetchUploadedCsvFiles = async () => {
         const filesRef = ref(storage, 'prayer_times/');
         try {
             const fileList = await listAll(filesRef); 
@@ -23,53 +28,111 @@ const PrayerTimeUploader = () => {
                 url: await getDownloadURL(item),
                 fullPath: item.fullPath,
             })));
-            setUploadedFiles(files); 
+            setUploadedCsvFiles(files); 
         } catch (error) {
-            console.error('Error fetching uploaded files: ', error);
+            console.error('Error fetching uploaded CSV files: ', error);
         }
     };
 
-    const handleFileChange = (e) => {
+    // Fetch uploaded PDF files from Firebase Storage
+    const fetchUploadedPdfFiles = async () => {
+        const pdfRef = ref(storage, 'prayer_pdfs/');
+        try {
+            const pdfList = await listAll(pdfRef);
+            const files = await Promise.all(pdfList.items.map(async (item) => ({
+                name: item.name,
+                url: await getDownloadURL(item),
+                fullPath: item.fullPath,
+            })));
+            setUploadedPdfFiles(files); 
+        } catch (error) {
+            console.error('Error fetching uploaded PDF files: ', error);
+        }
+    };
+
+    // Handle CSV file selection
+    const handleCsvFileChange = (e) => {
         const selectedFile = e.target.files[0];
         if (selectedFile) {
-            if (uploadedFiles.length > 0) {
-                setMessage('You can only upload one file. Please delete the existing file before uploading another.');
-                setFile(null); // Clear file selection if a file already exists
+            if (uploadedCsvFiles.length > 0) {
+                setMessage('You can only upload one CSV files. Please delete the existing file before uploading another.');
+                setCsvFile(null);
             } else {
-                setFile(selectedFile);
+                setCsvFile(selectedFile);
                 setMessage('');
             }
         }
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        if (!file) return;
+    // Handle PDF file selection
+    const handlePdfFileChange = (e) => {
+        const selectedFile = e.target.files[0];
+        if (selectedFile) {
+            if (uploadedPdfFiles.length > 0) {
+                setMessage('You can only upload one PDF files. Please delete the existing file before uploading another.');
+                setPdfFile(null);
+            } else {
+                setPdfFile(selectedFile);
+                setMessage('');
+            }
+        }
+    };
 
-        setIsUploading(true); // Start the upload process
+    // Handle CSV file upload
+    const handleCsvSubmit = async (e) => {
+        e.preventDefault();
+        if (!csvFile) return;
+
+        setIsUploadingCsv(true); // Start the upload process
         setMessage(''); // Clear any previous messages
 
-        const storageRef = ref(storage, `prayer_times/${file.name}`);
+        const storageRef = ref(storage, `prayer_times/${csvFile.name}`);
         try {
-            await uploadBytes(storageRef, file);
+            await uploadBytes(storageRef, csvFile);
             const reader = new FileReader();
             reader.onload = async (event) => {
                 const text = event.target.result;
                 const prayerTimes = parseCSV(text);
                 await uploadPrayerTimes(prayerTimes);
-                fetchUploadedFiles(); 
+                fetchUploadedCsvFiles(); 
                 setMessage('Prayer times uploaded successfully!');
             };
-            reader.readAsText(file);
+            reader.readAsText(csvFile);
         } catch (error) {
-            console.error('Error uploading file: ', error);
-            setMessage('Error uploading file.');
+            console.error('Error uploading CSV file: ', error);
+            setMessage('Error uploading CSV file.');
         } finally {
-            setIsUploading(false); // Stop showing the "Uploading..." message
-            setFile(null); // Clear the file selection after upload
+            setIsUploadingCsv(false);
+            setCsvFile(null);
         }
     };
 
+    // Handle PDF file upload
+    const handlePdfSubmit = async (e) => {
+        e.preventDefault();
+        if (!pdfFile) return;
+
+        setIsUploadingPdf(true); // Start the upload process
+        setMessage(''); // Clear any previous messages
+
+        const storageRef = ref(storage, `prayer_pdfs/${pdfFile.name}`);
+        try {
+            await uploadBytes(storageRef, pdfFile);
+            const url = await getDownloadURL(storageRef);
+            const docRef = await addDoc(collection(db, 'prayer_pdfs'), { name: pdfFile.name, url });
+            console.log('PDF Document written with ID: ', docRef.id); // Log document ID
+            fetchUploadedPdfFiles(); 
+            setMessage('PDF uploaded successfully!');
+        } catch (error) {
+            console.error('Error uploading PDF file: ', error);
+            setMessage('Error uploading PDF file.');
+        } finally {
+            setIsUploadingPdf(false);
+            setPdfFile(null);
+        }
+    };
+
+    // Parse CSV data
     const parseCSV = (data) => {
         const rows = data.split('\n').filter(row => row.trim() !== '');
         const result = rows.map(row => {
@@ -97,6 +160,7 @@ const PrayerTimeUploader = () => {
         return result;
     };
 
+    // Upload prayer times to Firestore
     const uploadPrayerTimes = async (prayerTimes) => {
         const prayerTimesCollection = collection(db, 'prayer_times');
         try {
@@ -109,12 +173,17 @@ const PrayerTimeUploader = () => {
         }
     };
 
-    const handleDelete = async (filePath) => {
+    // Handle file deletion
+    const handleDelete = async (filePath, type) => {
         const fileRef = ref(storage, filePath);
         try {
             await deleteObject(fileRef);
             setMessage('File deleted successfully.');
-            fetchUploadedFiles();
+            if (type === 'csv') {
+                fetchUploadedCsvFiles();
+            } else {
+                fetchUploadedPdfFiles();
+            }
         } catch (error) {
             console.error('Error deleting file: ', error);
             setMessage('Error deleting file.');
@@ -123,44 +192,72 @@ const PrayerTimeUploader = () => {
 
     return (
         <div className='mt-4'>
-            <BackButton/>
-        
+            <BackButton />
             <div className="p-6 min-h-screen flex flex-col items-center">
-                <h1 className="text-2xl font-bold mb-6">Upload Prayer Times</h1>
-                <form onSubmit={handleSubmit} className="bg-white p-4 rounded shadow-md w-full max-w-md mb-6">
+                <h1 className="text-2xl font-bold mb-6">Upload Prayer Times and PDFs</h1>
+                
+                {/* CSV Upload Form */}
+                <form onSubmit={handleCsvSubmit} className="bg-white p-4 rounded shadow-md w-full max-w-md mb-6">
                     <input
                         type="file"
                         accept=".csv"
-                        onChange={handleFileChange}
+                        onChange={handleCsvFileChange}
                         className="w-full mb-4 border rounded"
-                        disabled={uploadedFiles.length > 0 || isUploading} // Disable input if a file is already uploaded or during upload
+                        disabled={uploadedCsvFiles.length > 0 || isUploadingCsv} // Disable input if a file is already uploaded or during upload
                     />
                     <button
                         type="submit"
                         className="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600"
-                        disabled={!file || uploadedFiles.length > 0 || isUploading} // Disable button if no file selected, already uploaded, or during upload
+                        disabled={!csvFile || uploadedCsvFiles.length > 0 || isUploadingCsv} // Disable button if no file selected, already uploaded, or during upload
                     >
-                        {isUploading ? 'Uploading...' : 'Upload'} {/* Show "Uploading..." during upload */}
+                        {isUploadingCsv ? 'Uploading...' : 'Upload CSV'}
                     </button>
                 </form>
-                {message && <p className={`mt-2 ${isUploading ? 'text-yellow-500' : 'text-green-500'}`}>{message}</p>} {/* Display the message in yellow when uploading */}
 
-                <h2 className="text-xl font-bold mt-6">Uploaded Files</h2>
+                {/* PDF Upload Form */}
+                <form onSubmit={handlePdfSubmit} className="bg-white p-4 rounded shadow-md w-full max-w-md mb-6">
+                    <input
+                        type="file"
+                        accept=".pdf"
+                        onChange={handlePdfFileChange}
+                        className="w-full mb-4 border rounded"
+                        disabled={uploadedPdfFiles.length > 0 || isUploadingPdf} // Disable input during upload
+                    />
+                    <button
+                        type="submit"
+                        className="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600"
+                        disabled={!pdfFile || uploadedPdfFiles.length > 0 || isUploadingPdf} // Disable button if no file selected or during upload
+                    >
+                        {isUploadingPdf ? 'Uploading...' : 'Upload PDF'}
+                    </button>
+                </form>
+
+                {message && <p className={`mt-2 ${isUploadingCsv || isUploadingPdf ? 'text-yellow-500' : 'text-green-500'}`}>{message}</p>} {/* Display the message in yellow when uploading */}
+
+                <h2 className="text-xl font-bold mt-6">Uploaded CSV Files</h2>
                 <ul className="mt-4">
-                    {uploadedFiles.map((file) => (
-                        <li key={file.name} className="flex items-center justify-between p-2 gap-16 ">
-                            <span>{file.name}</span>
-                            <div className="flex gap-4">
-                                <a href={file.url} className="text-blue-500" download>
-                                    Download
-                                </a>
-                                <button 
-                                    onClick={() => handleDelete(file.fullPath)} 
-                                    className="text-red-500 hover:text-red-700"
-                                >
-                                    Delete
-                                </button>
-                            </div>
+                    {uploadedCsvFiles.map((file) => (
+                        <li key={file.name} className="flex items-center justify-between p-2 gap-8">
+                            <a href={file.url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                                {file.name}
+                            </a>
+                            <button onClick={() => handleDelete(file.fullPath, 'csv')} className="text-red-500 hover:underline">
+                                Delete
+                            </button>
+                        </li>
+                    ))}
+                </ul>
+
+                <h2 className="text-xl font-bold mt-6">Uploaded PDF Files</h2>
+                <ul className="mt-4">
+                    {uploadedPdfFiles.map((file) => (
+                        <li key={file.name} className="flex items-center justify-between p-2 gap-8">
+                            <a href={file.url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                                {file.name}
+                            </a>
+                            <button onClick={() => handleDelete(file.fullPath, 'pdf')} className="text-red-500 hover:underline">
+                                Delete
+                            </button>
                         </li>
                     ))}
                 </ul>

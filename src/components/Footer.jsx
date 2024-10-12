@@ -8,8 +8,8 @@ const Footer = () => {
     return (
         <div className="overflow-x-hidden">
             {/* Footer */}
-            <div className="flex flex-col w-full bg-slate-200  p-10">
-                <div className="flex flex-row flex-wrap sm:flex-nowrap justify-around items-center gap-10 w-full bg-slate-200">
+            <div className="flex flex-col w-full bg-slate-100  p-10">
+                <div className="flex flex-row flex-wrap sm:flex-nowrap justify-around items-center gap-10 w-full bg-slate-100">
                     <div className="flex flex-col items-start">
                         <img className="h-24 my-4" loading="lazy" alt="Logo" src="/bilallogohighresolution-1@2x.png" />
                         <div className="my-4 flex flex-col gap-2">

@@ -36,7 +36,7 @@ const Navbar = () => {
 
           {/* Desktop Menu */}
           <nav id="menu" className="sm:hidden md:flex lg:flex justify-center gap-10 items-center relative z-100">
-            <Link to="/about" className="no-underline text-black hover:text-gray-700">About Us</Link>
+            <Link to="/under-construction" className="no-underline text-black hover:text-gray-700">About Us</Link>
             <Link to="/under-construction" className="no-underline text-black hover:text-gray-700">Services</Link>
             <Link to="/events" className="no-underline text-black hover:text-gray-700">Calendar</Link>
 
@@ -83,7 +83,7 @@ const Navbar = () => {
         <div id="mobile-menu" className={`${isMobileMenuOpen ? 'block' : 'hidden'
             } sm:hidden flex flex-col justify-center items-center mt-4 bg-white shadow-md w-full py-4`} >
           {/* Menu Links */}
-          <Link to="/about" className="no-underline text-black hover:text-gray-700 py-2 block text-center w-full">
+          <Link to="/under-construction" className="no-underline text-black hover:text-gray-700 py-2 block text-center w-full">
             About Us
           </Link>
           <Link to="/under-construction" className="no-underline text-black hover:text-gray-700 py-2 block text-center w-full">

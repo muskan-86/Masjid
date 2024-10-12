@@ -53,6 +53,12 @@ const AdminPanel = () => {
                   <li className="p-2 hover:bg-green-200 rounded">
                     <Link to="/request">Requested Events</Link>
                   </li>
+                  <li className="p-2 hover:bg-green-200 rounded">
+                    <Link to="/upcomingevent">Upcoming Events</Link>
+                  </li>
+                  <li className="p-2 hover:bg-green-200 rounded">
+                    <Link to="/eventupload">Add Upcoming Events</Link>
+                  </li>
                 </ul>
               )}
             </li>

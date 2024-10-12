@@ -99,7 +99,7 @@ const HomePage = () => {
               {/* Left Section: Welcome Message */}
               <div className="flex flex-col gap-4 items-start justify-center text-left max-w-full p-2 mx-10">
                 <div className="my-4 w-full">
-                  <h2 className="font-black text-xl text-left" data-aos="fade-down">
+                  <h2 className="font-black text-xl text-center" data-aos="fade-down">
                     Welcome to Bilal Masjid
                   </h2>
                 </div>
@@ -113,8 +113,13 @@ const HomePage = () => {
                   <IndexDonateBtn />
                 </div>
               </div>
+              
+                {/* Middle Section: Prayer Times */}
+              <div data-aos="zoom-in" className=" mb-8">
+                <PrayerTimes />
+              </div>
 
-              {/* Middle Section: Image and Address Button */}
+              {/* Right Section: Image and Address Button */}
               <div className="relative w-[40] flex justify-center z-20 mx-10" data-aos="zoom-in" data-aos-duration="1500ms" data-aos-delay="3000ms">
                 <img className="h-[450px] w-[350px]" src="/mask-group@2x.png" alt="Middle Section Image" />
                 <div className='absolute  bottom-[10px] left-50 transform -translate-x-1/2 ml-6'>
@@ -125,12 +130,6 @@ const HomePage = () => {
                     </span>
                   </div>
                 </div>
-
-              </div>
-
-              {/* Right Section: Prayer Times */}
-              <div data-aos="zoom-in" className=" mt-6">
-                <PrayerTimes />
               </div>
             </div>
           </div>
@@ -142,7 +141,7 @@ const HomePage = () => {
             className=" relative w-screen h-60 flex justify-center"
             style={{ backgroundImage: `url('/background.png')` }}
           >
-            <div className="absolute inset-0 bg-white opacity-75"></div> {/* Background Overlay */}
+            <div className="absolute inset-0 bg-white opacity-75"></div> 
             <div className="flex justify-center items-center max-w-full my-9 font-serif z-20">
               <button
                 className="bg-white rounded-full border-4 border-green-600 px-6 py-2 text-green-600 font-medium text-2xl font-sans"

@@ -18,6 +18,9 @@ import EventDetails from "./components/EventDetails";
 import KhateebSchedule from "./components/KhateebSchedule.jsx";
 import Announcements from "./components/Announcements.jsx";
 import UnderConstruction from './components/UnderConstruction';
+import UpcomingEvents from "./components/UpcomingEvents.jsx";
+import EventUpload from "./components/EventUpload.jsx";
+
 
 const clerkPublishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 function App() {
@@ -41,7 +44,9 @@ function App() {
             <Route path="/prayer-times" element={<PrayerTimeUploader />} />
             <Route path="/khateeb" element={<KhateebSchedule />} />
             <Route path="/under-construction" element={<UnderConstruction />} />
-            
+            <Route path="/upcomingevent" element={<UpcomingEvents/>} />
+            <Route path="/eventupload" element={<EventUpload/>} />
+          
             <Route
             path="/admin-panel"
             element={
