@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { db } from "../firebase-config";
 import { collection, updateDoc, doc, onSnapshot, addDoc } from "firebase/firestore";
 import BackButton from './BackButton';
+import { sendEventNotification } from '../services/emailService';
 const RequestedEvents = () => {
   const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -28,6 +29,12 @@ const RequestedEvents = () => {
       // Update the status in requested_events collection
       await updateDoc(doc(db, "requested_events", event.id), { status: "approved" });
 
+       // Log the email address being sent
+    console.log("Sending email to:", event.contactEmail);
+
+    // Send email notification
+    await sendEventNotification(event.contactEmail, event, "approved");
+
       // Remove from local state
       setEvents(events.filter(e => e.id !== event.id));
       console.log("Event approved: ", event.id);
@@ -48,6 +55,13 @@ const RequestedEvents = () => {
 
       // Update status in requested_events collection
       await updateDoc(doc(db, "requested_events", event.id), { status: "denied", reason });
+
+    
+  // Log the email address being sent
+  console.log("Sending email to:", event.contactEmail);
+
+  // Send email notification
+  await sendEventNotification(event.contactEmail, event, "denied", reason);
 
       // Remove from local state
       setEvents(events.filter(e => e.id !== event.id));

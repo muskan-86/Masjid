@@ -15,11 +15,12 @@ import { AnnouncementProvider } from './context/AnnouncementContext';
 import PrayerTimeUploader from './components/PrayerTimeUploader';
 import ProtectedRoute from './components/ProtectedRoute';
 import EventDetails from "./components/EventDetails";
-import KhateebSchedule from "./components/KhateebSchedule.jsx";
+import KhateebFileUpload from "./components/KhateebFileUpload.jsx";
 import Announcements from "./components/Announcements.jsx";
 import UnderConstruction from './components/UnderConstruction';
 import UpcomingEvents from "./components/UpcomingEvents.jsx";
-import EventUpload from "./components/EventUpload.jsx";
+import UpcomingEventUpload from "./components/UpcomingEventUpload.jsx";
+import KhateebSchedule from "./components/KhateebSchedule.jsx";
 
 
 const clerkPublishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
@@ -40,12 +41,13 @@ function App() {
             <Route path="/denied" element={<DeniedEvents />} />
             <Route path="/announcement" element={<Announcements />} />
             <Route path="/update" element={<AnnouncementUpdate />} />
+            <Route path="/khateeb-schedule" element={<KhateebSchedule/>}/>
             <Route path="/event-details/:eventId" element={<EventDetails />} />
             <Route path="/prayer-times" element={<PrayerTimeUploader />} />
-            <Route path="/khateeb" element={<KhateebSchedule />} />
+            <Route path="/khateeb" element={<KhateebFileUpload />} />
             <Route path="/under-construction" element={<UnderConstruction />} />
             <Route path="/upcomingevent" element={<UpcomingEvents/>} />
-            <Route path="/eventupload" element={<EventUpload/>} />
+            <Route path="/eventupload" element={<UpcomingEventUpload/>} />
           
             <Route
             path="/admin-panel"

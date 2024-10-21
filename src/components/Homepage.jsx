@@ -9,7 +9,7 @@ import Navbar from "./Navbar.jsx";
 import Loader from "./Loader.jsx"
 import WhatsAppButton from "./WhatsAppButton.jsx";
 import AnnouncementButton from './AnnouncementButton.jsx';
-import AnnouncementPopup from './AnnouncementPopup.jsx';
+
 import "./home.css";
 import { useEffect, useState } from "react";
 import AOS from "aos";
@@ -18,7 +18,7 @@ import PrayerTimes from './PrayerTimes.jsx';
  
 const HomePage = () => {
   const [loading, setLoading] = useState(true); // State to track loader status
-  const [isAnnouncementOpen, setIsAnnouncementOpen] = useState(false);
+
 
   useEffect(() => {
     // Simulate loader completion after a delay (e.g., 3 seconds)

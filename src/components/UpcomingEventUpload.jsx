@@ -4,7 +4,7 @@ import { collection, addDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import BackButton from './BackButton';
 
-const EventUpload = () => {
+const UpcomingEventUpload = () => {
     const [title, setTitle] = useState('');
     const [date, setDate] = useState('');
     const [startTime, setStartTime] = useState('');
@@ -14,7 +14,6 @@ const EventUpload = () => {
     const [contactEmail, setContactEmail] = useState('');
     const [contactPhone, setContactPhone] = useState('');
     const [poster, setPoster] = useState(null);
-    const [order, setOrder] = useState(0); // Order input state
     const [isUploading, setIsUploading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
@@ -37,7 +36,7 @@ const EventUpload = () => {
                 contactEmail,
                 contactPhone,
                 posterUrl,
-                order: Number(order), // Store the order as a number
+               
             });
 
             // Clear form after upload
@@ -50,7 +49,7 @@ const EventUpload = () => {
             setContactEmail('');
             setContactPhone('');
             setPoster(null);
-            setOrder(0);
+           
 
             e.target.reset();
             alert("Event request submitted successfully.");
@@ -216,20 +215,7 @@ const EventUpload = () => {
                 />
             </div>
 
-            {/* Order Input */}
-            <div className="mb-4">
-                <label className="block text-gray-700">
-                    Event Order (for sorting) <span className="text-red-500">*</span>
-                </label>
-                <input
-                    type="number"
-                    name="order"
-                    value={order}
-                    onChange={(e) => setOrder(e.target.value)}
-                    className="w-full px-4 py-2 border rounded"
-                    required
-                />
-            </div>
+
 
             {/* Submit Button */}
             <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded w-full" disabled={isUploading}>
@@ -239,4 +225,4 @@ const EventUpload = () => {
     );
 };
 
-export default EventUpload;
+export default UpcomingEventUpload;

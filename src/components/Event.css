@@ -1,28 +1,18 @@
-.slick-arrow {
-    display: flex !important;  /* Ensure arrows are displayed */
-    background: gray;          /* Background color for visibility */
-    border-radius: 50%;        /* Round shape */
-    width: 40px;               /* Adjust size */
-    height: 40px;              /* Adjust size */
-    z-index: 1000;             /* Bring to front */
-    align-items: center;       /* Center align arrow icon */
-    justify-content: center;    /* Center align arrow icon */
-  }
-  
-  .slick-prev {
-    left: 10px !important;     /* Positioning */
-  }
-  
-  .slick-next {
-    right: 10px !important;    /* Positioning */
-  }
-  
-  /* Optional: If arrows overlap with content, adjust the z-index or margin */
-  @media (max-width: 768px) {
-    .slick-arrow {
-      display: flex !important;  /* Ensure arrows are displayed */
-      z-index: 1000;             /* Bring to front */
-      /* You can also adjust size or positioning for small screens if necessary */
-    }
-  }
-  
+.arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1000;
+}
+
+.next-arrow {
+  right: 10px; /* Adjust based on your design */
+}
+
+.prev-arrow {
+  left: 10px; /* Adjust based on your design */
+}

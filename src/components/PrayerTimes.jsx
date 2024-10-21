@@ -5,7 +5,7 @@ import { db } from '../firebase-config';
 import { getFirestore, collection, getDocs } from "firebase/firestore";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
-
+import { Link } from "react-router-dom";
 
 const PrayerTimes = () => {
     const [todayPrayerTimes, setTodayPrayerTimes] = useState(null);
@@ -29,26 +29,35 @@ const PrayerTimes = () => {
         fetchPdfs();
     }, []);
 
-    const handleDownload = async (pdf) => {
-        if (!pdf.url) {
-            console.error("URL is not valid:", pdf.url);
-            return;
-        }
+   const handleDownload = (pdf) => {
+    if (!pdf.url) {
+        console.error("URL is not valid:", pdf.url);
+        return;
+    }
 
-        try {
-            const response = await fetch(pdf.url);
-            if (!response.ok) throw new Error('Network response was not ok');
-            const blob = await response.blob(); // Create a blob from the response
-            const link = document.createElement('a');
-            link.href = window.URL.createObjectURL(blob); // Create a URL for the blob
-            link.download = pdf.name; // Use the name from the PDF object
-            document.body.appendChild(link);
-            link.click(); // Programmatically click the link to trigger the download
-            document.body.removeChild(link); // Remove the link from the DOM
-        } catch (error) {
-            console.error("Download error:", error);
-        }
-    };
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    if (isIOS) {
+        // For iOS devices, open the URL directly
+        window.open(pdf.url, '_blank');
+    } else {
+        // For other devices, trigger the download
+        fetch(pdf.url)
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.blob();
+            })
+            .then(blob => {
+                const link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = pdf.name;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            })
+            .catch(error => console.error("Download error:", error));
+    }
+};
+
 
 
     const fetchPrayerTimes = async () => {
@@ -113,109 +122,108 @@ const PrayerTimes = () => {
 
     useEffect(() => {
         fetchPrayerTimes(); // Fetch the latest CSV file
-        fetchKhateebSchedule(); // Fetch the Khateeb schedule on component mount
+        // fetchKhateebSchedule(); // Fetch the Khateeb schedule on component mount
     }, []);
 
 
-    const createHTMLTable = (data) => {
-        let table = '<table style="width:100%; border-collapse: collapse; margin: 20px 0;">';
-        table += '<thead><tr>';
+    // const createHTMLTable = (data) => {
+    //     let table = '<table style="width:100%; border-collapse: collapse; margin: 20px 0;">';
+    //     table += '<thead><tr>';
 
-        if (data.length > 0) {
-            Object.keys(data[0]).forEach(header => {
-                table += `<th style="border: 1px solid #ddd; padding: 8px;">${header}</th>`;
-            });
-            table += '</tr></thead><tbody>';
+    //     if (data.length > 0) {
+    //         Object.keys(data[0]).forEach(header => {
+    //             table += `<th style="border: 1px solid #ddd; padding: 8px;">${header}</th>`;
+    //         });
+    //         table += '</tr></thead><tbody>';
 
-            data.forEach(row => {
-                table += '<tr>';
-                Object.values(row).forEach(value => {
-                    table += `<td style="border: 1px solid #ddd; padding: 8px;">${value}</td>`;
-                });
-                table += '</tr>';
-            });
-            table += '</tbody></table>';
-        } else {
-            table += '<tr><td>No data available</td></tr></tbody></table>';
-        }
+    //         data.forEach(row => {
+    //             table += '<tr>';
+    //             Object.values(row).forEach(value => {
+    //                 table += `<td style="border: 1px solid #ddd; padding: 8px;">${value}</td>`;
+    //             });
+    //             table += '</tr>';
+    //         });
+    //         table += '</tbody></table>';
+    //     } else {
+    //         table += '<tr><td>No data available</td></tr></tbody></table>';
+    //     }
 
-        return table;
-    };
+    //     return table;
+    // };
 
-    const fetchKhateebSchedule = async () => {
-        try {
-            const db = getFirestore();
-            const khateebCollection = collection(db, 'khateeb_schedule');
-            const snapshot = await getDocs(khateebCollection);
+    // const fetchKhateebSchedule = async () => {
+    //     try {
+    //         const db = getFirestore();
+    //         const khateebCollection = collection(db, 'khateeb_schedule');
+    //         const snapshot = await getDocs(khateebCollection);
     
-            console.log('Documents found:', snapshot.docs.length); // Check document count
+    //         console.log('Documents found:', snapshot.docs.length); // Check document count
     
-            if (snapshot.docs.length > 0) {
-                // Loop through documents to find a valid file URL
-                let validFileUrl = null;
-                snapshot.docs.forEach(doc => {
-                    const data = doc.data();
-                    console.log('Document data:', data); // Log the document data
-                    if (data.fileURL) {
-                        validFileUrl = data.fileURL; // Assign the first valid file URL found
-                    }
-                });
+    //         if (snapshot.docs.length > 0) {
+    //             // Loop through documents to find a valid file URL
+    //             let validFileUrl = null;
+    //             snapshot.docs.forEach(doc => {
+    //                 const data = doc.data();
+    //                 console.log('Document data:', data); // Log the document data
+    //                 if (data.fileURL) {
+    //                     validFileUrl = data.fileURL; // Assign the first valid file URL found
+    //                 }
+    //             });
     
-                if (validFileUrl) {
-                    console.log('Fetched file URL:', validFileUrl); // Log the fetched URL
-                    setKhateebScheduleFile(validFileUrl);
-                } else {
-                    console.warn('No valid file URL found in documents!');
-                    setKhateebScheduleFile(null);
-                }
-            } else {
-                console.warn('No documents found in khateeb_schedule!');
-                setKhateebScheduleFile(null);
-            }
-        } catch (error) {
-            console.error('Error fetching Khateeb schedule:', error);
-        }
-    };
+    //             if (validFileUrl) {
+    //                 console.log('Fetched file URL:', validFileUrl); // Log the fetched URL
+    //                 setKhateebScheduleFile(validFileUrl);
+    //             } else {
+    //                 console.warn('No valid file URL found in documents!');
+    //                 setKhateebScheduleFile(null);
+    //             }
+    //         } else {
+    //             console.warn('No documents found in khateeb_schedule!');
+    //             setKhateebScheduleFile(null);
+    //         }
+    //     } catch (error) {
+    //         console.error('Error fetching Khateeb schedule:', error);
+    //     }
+    // };
     
 
-    const openKhateebScheduleInNewTab = async () => {
-        try {
-            // Fetch the CSV file from the provided URL
-            const response = await fetch(khateebScheduleFile); // Use the URL from your state
-            const text = await response.text();
-            const newTab = window.open('', '_blank'); // Open a new tab
+    // const openKhateebScheduleInNewTab = async () => {
+    //     try {
+    //         // Fetch the CSV file from the provided URL
+    //         const response = await fetch(khateebScheduleFile); // Use the URL from your state
+    //         const text = await response.text();
+    //         const newTab = window.open('', '_blank'); // Open a new tab
     
-            if (newTab) {
-                const parsedData = Papa.parse(text, { header: true }); // Parse CSV data
-                const csvTable = createHTMLTable(parsedData.data); // Create HTML table from parsed data
+    //         if (newTab) {
+    //             const parsedData = Papa.parse(text, { header: true }); // Parse CSV data
+    //             const csvTable = createHTMLTable(parsedData.data); // Create HTML table from parsed data
     
-                // Write the HTML content to the new tab without the download link
-                newTab.document.write(`
-                    <html>
-                        <head>
-                            <title>Khateeb Schedule</title>
-                            <style>
-                                body { font-family: Arial, sans-serif; }
-                                table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-                                th, td { border: 1px solid #ddd; padding: 8px; }
-                                th { background-color: #f2f2f2; }
-                            </style>
-                        </head>
-                        <body>
-                            <h1>Khateeb Schedule</h1>
-                            ${csvTable}
-                        </body>
-                    </html>
-                `);
-                newTab.document.close(); // Close the document for rendering
-            }
-        } catch (error) {
-            console.error('Error opening Khateeb schedule in new tab:', error);
-        }
-    };
+    //             // Write the HTML content to the new tab without the download link
+    //             newTab.document.write(`
+    //                 <html>
+    //                     <head>
+    //                         <title>Khateeb Schedule</title>
+    //                         <style>
+    //                             body { font-family: Arial, sans-serif; }
+    //                             table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+    //                             th, td { border: 1px solid #ddd; padding: 8px; }
+    //                             th { background-color: #f2f2f2; }
+    //                         </style>
+    //                     </head>
+    //                     <body>
+    //                         <h1>Khateeb Schedule</h1>
+    //                         ${csvTable}
+    //                     </body>
+    //                 </html>
+    //             `);
+    //             newTab.document.close(); // Close the document for rendering
+    //         }
+    //     } catch (error) {
+    //         console.error('Error opening Khateeb schedule in new tab:', error);
+    //     }
+    // };
     
-   
-
+    
     return (
         <div className="flex flex-col w-[400] h-auto  bg-mediumseagreen-300 mt-6 sm:mt-8 md:mt-10 text-white rounded-xl py-4 px-4 sm:px-6 relative">
             <div className="text-center">
@@ -234,15 +242,7 @@ const PrayerTimes = () => {
                         </a>
                     </li>
                 ))}
-                    {/* {csvDownloadURL && (
-                        <a
-                            onClick={openCSVInNewTab}
-                            className=" cursor-pointer"
-                            rel="noopener noreferrer"
-                        >
-                            <FontAwesomeIcon icon={faCalendar} className="text-white" />
-                        </a>
-                    )} */}
+                   
                 </div>
             </div>
 
@@ -273,14 +273,10 @@ const PrayerTimes = () => {
             ) : (
                 <p>Loading prayer times...</p>
             )}
-
-
-
-
             <div className="mt-6 mb-0 text-center">
-                <button onClick={openKhateebScheduleInNewTab} className="text-white font-bold border-b-2 border-white">
-                    Khateeb Schedule
-                </button>
+            <Link to="/khateeb-schedule" className="text-white font-bold border-b-2 border-white">
+        Khateeb Schedule
+    </Link>
             </div>
         </div>
     );

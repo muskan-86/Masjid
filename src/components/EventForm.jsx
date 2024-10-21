@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { db, storage } from "../firebase-config";
 import { collection, addDoc } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { sendEventNotification } from "../services/emailService";
 
 const EventForm = ({ onSubmit, onClose }) => {
   const [formData, setFormData] = useState({
@@ -62,18 +63,27 @@ const EventForm = ({ onSubmit, onClose }) => {
         });
       }
 
-      await addDoc(collection(db, "requested_events"), {
-        title,
-        date,
-        startTime,
-        endTime,  // Include endTime in the document
-        description,
-        contactName,
-        contactEmail,
-        contactPhone,
-        posterUrl,
-        status: "pending",
-      });
+       // Define the eventData object before use
+    const eventData = {
+      title,
+      date,
+      startTime,
+      endTime,
+      description,
+      contactName,
+      contactEmail,
+      contactPhone,
+      posterUrl,
+    };
+
+    // Add event data to Firestore
+    await addDoc(collection(db, "requested_events"), {
+      ...eventData,
+      status: "pending", // Default status
+    });
+
+      // Send email notification
+    await sendEventNotification(contactEmail, eventData, "pending");
 
       // Close the form and show the success message
       setFormData({
@@ -87,13 +97,15 @@ const EventForm = ({ onSubmit, onClose }) => {
         contactPhone: "",
         poster: null,
       });
+        
+
 
       e.target.reset();
       if (onClose) onClose(); // Close the form
 
       // Show the success message after form is closed
       setTimeout(() => {
-        alert("Event request submitted successfully.");
+        alert("Event request was submitted and you will get response via email..");
         if (onSubmit) onSubmit();
       }, 500); // Slight delay to ensure form closes first
     } catch (error) {
