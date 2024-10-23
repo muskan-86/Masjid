@@ -9,7 +9,6 @@ import Navbar from "./Navbar.jsx";
 import Loader from "./Loader.jsx"
 import WhatsAppButton from "./WhatsAppButton.jsx";
 import AnnouncementButton from './AnnouncementButton.jsx';
-
 import "./home.css";
 import { useEffect, useState } from "react";
 import AOS from "aos";

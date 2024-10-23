@@ -1,7 +1,7 @@
 [
   {
-    "origin": ["http://localhost:5173","https://bilalmasjid-49299.web.app"],
-    "method": ["GET", "POST"],
+    "origin": ["http://localhost:5173","https://bilalmasjid-49299.web.app","https://bilalmasjid.net"],
+    "method": ["GET", "HEAD"],
     "maxAgeSeconds": 3600
   }
 ]
