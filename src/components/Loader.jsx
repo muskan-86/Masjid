@@ -8,13 +8,14 @@ const Loader = () => {
 
   useEffect(() => {
     AOS.init({
-      duration: 3000,
+      duration: 1000,
       once: true,
       offset: 90,
+      delay:200,
     });
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 3000);
+    }, 500);
     return () => clearTimeout(timer);
   }, []);
 

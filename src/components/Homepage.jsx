@@ -20,16 +20,15 @@ const HomePage = () => {
 
 
   useEffect(() => {
-    // Simulate loader completion after a delay (e.g., 3 seconds)
+    // Simulate loader completion after a delay (e.g., 1 seconds)
     const timer = setTimeout(() => {
       setLoading(false); // Set loading to false once done
-    }, 3000);
+    }, 500);
 
     AOS.init({
-      duration: 2000,
-      delay: 3000,
+      duration: 1000,
+      delay: 200,
     });
-
     // Cleanup timer
     return () => clearTimeout(timer);
   }, []);
@@ -37,7 +36,7 @@ const HomePage = () => {
   return (
     <>
       <div className="overflow-hidden bg-white">
-        {loading && <Loader />} {/* Show loader if loading is true */}
+        <Loader/>
         <div className="relative z-40" data-aos="fade-down">
           <Navbar />
         </div>
@@ -45,9 +44,10 @@ const HomePage = () => {
         <div className="relative gap-4">
           {/* Other components */}
           {!loading && <AnnouncementButton/>}
+          {!loading && <WhatsAppButton />}
         </div>
-
-        {!loading && <WhatsAppButton />}
+        
+       
 
         {/* hero Section*/}
         <div className="mt-2 font-noto-sans">
@@ -73,7 +73,7 @@ const HomePage = () => {
               </div>
 
               {/* Middle Section: Image and Address Button */}
-              <div className=" relative w-[30]  flex justify-center m-auto z-20" data-aos="zoom-in" data-aos-duration="1500ms" data-aos-delay="3000ms">
+              <div className=" relative w-[30]  flex justify-center m-auto z-20" data-aos="zoom-in">
                 <img className="h-[500px] w-[350px]" src="/mask-group@2x.png" alt="Middle Section Image" />
 
                 <div className="absolute ml-2 bottom-[10px] left-50 transform -translate-x-1/2 bg-white rounded-lg border-2 border-green-600 px-6 py-2 flex items-center shadow-lg">
@@ -119,7 +119,7 @@ const HomePage = () => {
               </div>
 
               {/* Right Section: Image and Address Button */}
-              <div className="relative w-[40] flex justify-center z-20 mx-10" data-aos="zoom-in" data-aos-duration="1500ms" data-aos-delay="3000ms">
+              <div className="relative w-[40] flex justify-center z-20 mx-10" data-aos="zoom-in" >
                 <img className="h-[450px] w-[350px]" src="/mask-group@2x.png" alt="Middle Section Image" />
                 <div className='absolute  bottom-[10px] left-50 transform -translate-x-1/2 ml-6'>
                   <div className="  bg-white rounded-lg border-2 border-green-600 px-2 py-2 flex items-center shadow-lg">
@@ -144,8 +144,7 @@ const HomePage = () => {
             <div className="flex justify-center items-center max-w-full my-9 font-serif z-20">
               <button
                 className="bg-white rounded-full border-4 border-green-600 px-6 py-2 text-green-600 font-medium text-2xl font-sans"
-                data-aos="fade-in" data-aos-duration="1500" data-aos-delay="500"
-              >
+                data-aos="fade-in" >
                 Upcoming Events
               </button>
             </div>
@@ -164,8 +163,7 @@ const HomePage = () => {
               <div className="flex justify-center items-center max-w-full my-12 font-serif z-20">
                 <button
                   className="bg-white rounded-full border-4 border-green-600 px-8 py-2 text-green-600 font-medium text-2xl font-sans"
-                  data-aos="fade-in" data-aos-duration="1500" data-aos-delay="500"
-                >
+                  data-aos="fade-in" >
                   Our Services
                 </button>
               </div>
@@ -175,9 +173,7 @@ const HomePage = () => {
             {/* Services List */}
             <div
               className="flex flex-row flex-wrap justify-around items-center"
-              data-aos="slide-left" data-aos-duration="1500"
-              data-aos-delay="500"
-            >
+              data-aos="slide-left">
               {/* Service 1 */}
               <div className="flex flex-col  gap-12 justify-center items-center p-10">
                 <div className="min-h-40 bg-mediumseagreen-300 rounded-full flex flex-col min-w-40 justify-center items-center ">
@@ -248,9 +244,7 @@ const HomePage = () => {
           {/* <div className="absolute bg-center opacity-30"></div> */}
           <div
             className="relative bg-white z-10 flex flex-col shadow-md md:flex-row mx-auto max-w-2xl py-20 px-6 md:p-16  rounded-3xl my-8 items-center justify-center md:items-start"
-            data-aos="fade-in" data-aos-duration="1500"
-            data-aos-delay="500"
-          >
+            data-aos="fade-in" >
             <div className="w-full">
               <div className="flex flex-col items-center justify-center md:items-start gap-2">
                 <h2 className="font-bold text-center md:text-left text-2xl">

@@ -45,7 +45,7 @@ const Navbar = () => {
               <a href="#" className="no-underline text-black hover:text-gray-700">Donations</a>
               <div className="absolute  dropdown mt-2 w-36 bg-white border border-gray-200 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200  left-1/2 transform -translate-x-1/2 z-50">
                 <a href="https://us.mohid.co/or/portland/bma/masjid/online/donation"
-                  className="block px-4 py-2 text-gray-800 hover:bg-green-200">Donate Online</a>
+                  className="block px-4 py-2 text-gray-800 hover:bg-green-200">Donate via Card/Paypal</a>
                 <a href="https://bilalmasjid.com/Information/donate.aspx"
                   className="block px-4 py-2 text-gray-800 hover:bg-green-200">Donate Stock</a>
               </div>
@@ -111,7 +111,7 @@ const Navbar = () => {
                 href="https://us.mohid.co/or/portland/bma/masjid/online/donation"
                 className="block px-4 py-2 text-gray-800  w-full text-center hover:bg-green-200"
               >
-                Donate Online
+                Donate via Card/Paypal
               </a>
               <a
                 href="https://bilalmasjid.com/Information/donate.aspx"

@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 const PrayerTimes = () => {
     const [todayPrayerTimes, setTodayPrayerTimes] = useState(null);
     const [csvDownloadURL, setCsvDownloadURL] = useState('');
-    const [khateebScheduleFile, setKhateebScheduleFile] = useState('');
+    // const [khateebScheduleFile, setKhateebScheduleFile] = useState('');
     const [pdfs, setPdfs] = useState([]);
 
 
@@ -255,10 +255,10 @@ const PrayerTimes = () => {
                 <div className="flex flex-col gap-2 text-left">
                     {[
                         { name: 'Fajr', icon: '/sunrise@2x.png' },
-                        { name: 'Duhr', icon: '/sunrise-1@2x.png' },
-                        { name: 'Asr', icon: '/sun@2x.png' },
-                        { name: 'Maghrib', icon: '/sun@2x.png' },
-                        { name: 'Isha', icon: '/sunrise@2x.png' }
+                        { name: 'Duhr', icon: '/sun@2x.png' },
+                        { name: 'Asr', icon: '/sunrise-1@2x.png' },
+                        { name: 'Maghrib', icon: '/sunset@2x.png' },
+                        { name: 'Isha', icon: '/moon-and-stars@2x.png' }
                     ].map((prayer, index) => (
                         <div key={index} className="grid grid-cols-3 items-center mb-2">
                             <div className="flex items-center gap-2">

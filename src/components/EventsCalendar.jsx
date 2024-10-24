@@ -35,14 +35,14 @@ const EventsCalendar = () => {
   const navigate = useNavigate();
 
 
-  useEffect(() => {
+  // useEffect(() => {
     
-    const timer = setTimeout(() => {
-      setLoading(false); // Set loading to false once done
-    }, 3000);
-    // Cleanup timer
-    return () => clearTimeout(timer);
-  }, []);
+  //   const timer = setTimeout(() => {
+  //     setLoading(false); // Set loading to false once done
+  //   }, 3000);
+  //   // Cleanup timer
+  //   return () => clearTimeout(timer);
+  // }, []);
 
 useEffect(() => {
   const unsubscribe = onSnapshot(collection(db, "approved_events"), (snapshot) => {
@@ -119,9 +119,9 @@ const allEvents = [...events, ...firestoreEvents];
               className="bg-mediumseagreen-300 text-white px-4 py-2 rounded mx-2 mb-2"
               onClick={handleToggleForm}
             >
-              Request A Event
+              Request
             </button>
-            <p className=" mb-4">Request an Event in bilal masjid</p>
+            <p className=" mb-4">Request to use Bilal Masjid Facilities for an Event</p>
             
           </div>
         </div>
