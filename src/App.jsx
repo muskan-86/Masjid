@@ -21,6 +21,7 @@ import UnderConstruction from './components/UnderConstruction';
 import UpcomingEvents from "./components/UpcomingEvents.jsx";
 import UpcomingEventUpload from "./components/UpcomingEventUpload.jsx";
 import KhateebSchedule from "./components/KhateebSchedule.jsx";
+import Donation from "./components/Donation.jsx"
 
 
 const clerkPublishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
@@ -48,6 +49,7 @@ function App() {
             <Route path="/under-construction" element={<UnderConstruction />} />
             <Route path="/upcomingevent" element={<UpcomingEvents/>} />
             <Route path="/eventupload" element={<UpcomingEventUpload/>} />
+            <Route path="/donations" element={<Donation/>} />
           
             <Route
             path="/admin-panel"
