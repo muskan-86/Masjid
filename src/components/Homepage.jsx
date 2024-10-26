@@ -201,7 +201,7 @@ const HomePage = () => {
 
               {/* Service 2 */}
               <div className="flex flex-col gap-12 justify-center items-center p-10">
-                <div className="min-h-40 bg-green-600 rounded-full flex flex-col min-w-40 bg-mediumseagreen-300 justify-center items-center">
+                <div className="min-h-40 bg-mediumseagreen-300 rounded-full flex flex-col min-w-40  justify-center items-center">
                   <a href="https://chat.whatsapp.com/B8c6ngDZTkBI8RBs6JHEgm" target="_blank" rel="noopener noreferrer">
                     <img
                       className="w-20 h-20 text-center"
@@ -225,7 +225,7 @@ const HomePage = () => {
 
               {/* Service 3 */}
               <div className="flex flex-col gap-12 justify-center items-center p-10">
-                <div className="min-h-40 bg-green-600 flex flex-col min-w-40 bg-mediumseagreen-300 justify-center items-center rounded-full">
+                <div className="min-h-40 bg-mediumseagreen-300 flex flex-col min-w-40  justify-center items-center rounded-full">
                   <Link to="/events">
                     <img
                       className="w-20 h-20 text-center"

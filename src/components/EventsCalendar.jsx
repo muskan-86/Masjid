@@ -35,14 +35,14 @@ const EventsCalendar = () => {
   const navigate = useNavigate();
 
 
-  // useEffect(() => {
+  useEffect(() => {
     
-  //   const timer = setTimeout(() => {
-  //     setLoading(false); // Set loading to false once done
-  //   }, 3000);
-  //   // Cleanup timer
-  //   return () => clearTimeout(timer);
-  // }, []);
+    const timer = setTimeout(() => {
+      setLoading(false); // Set loading to false once done
+    }, 500);
+    // Cleanup timer
+    return () => clearTimeout(timer);
+  }, []);
 
 useEffect(() => {
   const unsubscribe = onSnapshot(collection(db, "approved_events"), (snapshot) => {
@@ -98,8 +98,10 @@ const allEvents = [...events, ...firestoreEvents];
         <div className="relative gap-2">
         {/* Other components */}
         {!loading && <AnnouncementButton/>}
+        {!loading && < WhatsAppButton/>}
+
       </div>
-      {!loading && < WhatsAppButton/>}
+      
         {/* Calendar */}
         <div className="mb-2 relative max-w-full h-40 flex justify-center bg-cover-img"
           style={{ backgroundImage: "url('/background.png')" }}>
