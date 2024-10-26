@@ -62,12 +62,12 @@ const AdminPanel = () => {
                 </ul>
               )}
             </li>
-            <li className="mt-3">
+            {/* <li className="mt-3">
               <Link to="/donations" className="hover:text-gray-300 flex items-center">
                 <FontAwesomeIcon icon={faDollarSign} className="mr-2" />
                 Donation Management
               </Link>
-            </li>
+            </li> */}
            
             <li className="mt-3">
               <div 

@@ -237,7 +237,7 @@ const PrayerTimes = () => {
                     {pdfs.map(pdf => (
                     <li key={pdf.id} className="mb-2 flex items-center">
                        
-                        <a onClick={() => handleDownload(pdf)}>
+                        <a  className="text-white transform transition-transform duration-300 hover:scale-150" onClick={() => handleDownload(pdf)} >
                             <FontAwesomeIcon icon={faCalendar} className="text-white" />
                         </a>
                     </li>

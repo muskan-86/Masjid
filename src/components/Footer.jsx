@@ -20,9 +20,9 @@ const Footer = () => {
                     <div className="flex flex-row gap-12 items-start">
                         <div className="flex flex-col gap-4 font-medium">
                             <p className="font-semibold">Quick Links</p>
-                            <p>About Us</p>
-                            <p>Services</p>
-                            <p>Community</p>
+                            <p> <Link to="/about" className="no-underline text-black ">About Us</Link></p>
+                            <p><Link to="/events" className="no-underline text-black ">Calendar</Link></p>
+                            <p><Link to="/announcement" className="no-underline text-black ">Announcement </Link></p>
                             <Link to="/login" className="no-underline text-black hover:text-gray-700">Admin Panel</Link>
                         </div>
                         <div className="flex flex-col justify-center mx-4 items-center">

@@ -12,9 +12,10 @@ import AnnouncementButton from './AnnouncementButton.jsx';
 import "./home.css";
 import { useEffect, useState } from "react";
 import AOS from "aos";
-import "aos/dist/aos.css"; 
+import "aos/dist/aos.css";
 import PrayerTimes from './PrayerTimes.jsx';
- 
+import { Link } from 'react-router-dom';
+
 const HomePage = () => {
   const [loading, setLoading] = useState(true); // State to track loader status
 
@@ -36,18 +37,18 @@ const HomePage = () => {
   return (
     <>
       <div className="overflow-hidden bg-white">
-        <Loader/>
+        <Loader />
         <div className="relative z-40" data-aos="fade-down">
           <Navbar />
         </div>
 
         <div className="relative gap-4">
           {/* Other components */}
-          {!loading && <AnnouncementButton/>}
+          {!loading && <AnnouncementButton />}
           {!loading && <WhatsAppButton />}
         </div>
-        
-       
+
+
 
         {/* hero Section*/}
         <div className="mt-2 font-noto-sans">
@@ -87,7 +88,7 @@ const HomePage = () => {
               {/* Right Section: Prayer Times */}
               <div data-aos="zoom-in">
                 <PrayerTimes />
-               
+
               </div>
             </div>
           </div>
@@ -112,8 +113,8 @@ const HomePage = () => {
                   <IndexDonateBtn />
                 </div>
               </div>
-              
-                {/* Middle Section: Prayer Times */}
+
+              {/* Middle Section: Prayer Times */}
               <div data-aos="zoom-in" className=" mb-8">
                 <PrayerTimes />
               </div>
@@ -140,7 +141,7 @@ const HomePage = () => {
             className=" relative w-screen h-60 flex justify-center"
             style={{ backgroundImage: `url('/background.png')` }}
           >
-            <div className="absolute inset-0 bg-white opacity-75"></div> 
+            <div className="absolute inset-0 bg-white opacity-75"></div>
             <div className="flex justify-center items-center max-w-full my-9 font-serif z-20">
               <button
                 className="bg-white rounded-full border-4 border-green-600 px-6 py-2 text-green-600 font-medium text-2xl font-sans"
@@ -159,7 +160,7 @@ const HomePage = () => {
               className="relative w-full h-60 flex justify-center mx-72 px-96"
               style={{ backgroundImage: `url('/background.png')` }}
             >
-              <div className="absolute inset-0 bg-white opacity-75"></div> 
+              <div className="absolute inset-0 bg-white opacity-75"></div>
               <div className="flex justify-center items-center max-w-full my-12 font-serif z-20">
                 <button
                   className="bg-white rounded-full border-4 border-green-600 px-8 py-2 text-green-600 font-medium text-2xl font-sans"
@@ -177,14 +178,19 @@ const HomePage = () => {
               {/* Service 1 */}
               <div className="flex flex-col  gap-12 justify-center items-center p-10">
                 <div className="min-h-40 bg-mediumseagreen-300 rounded-full flex flex-col min-w-40 justify-center items-center ">
-                  <img
-                    className="w-20 h-20 text-center"
-                    src="/graduation-cap@2x.png"
-                    alt="Education Icon"
-                  />
+                  <a href="https://www.bilalsundayschool.com/" target="_blank" rel="noopener noreferrer">
+                    <img
+                      className="w-20 h-20 text-center"
+                      src="/graduation-cap@2x.png"
+                      alt="Education Icon"
+                    />
+                  </a>
+
                 </div>
                 <div className="flex flex-col justify-center items-center">
+                <a href="https://www.bilalsundayschool.com/" target="_blank" rel="noopener noreferrer">
                   <h3 className="font-bold text-2xl">Education</h3>
+                </a>  
                   <p className="text-center mt-2 w-full max-w-xs">
                     We provide Islamic education to the community. We have a
                     dedicated team of teachers who teach Quran, Hadith, and
@@ -196,14 +202,19 @@ const HomePage = () => {
               {/* Service 2 */}
               <div className="flex flex-col gap-12 justify-center items-center p-10">
                 <div className="min-h-40 bg-green-600 rounded-full flex flex-col min-w-40 bg-mediumseagreen-300 justify-center items-center">
-                  <img
-                    className="w-20 h-20 text-center"
-                    src="/users@2x.png"
-                    alt="Community Icon"
-                  />
+                  <a href="https://chat.whatsapp.com/B8c6ngDZTkBI8RBs6JHEgm" target="_blank" rel="noopener noreferrer">
+                    <img
+                      className="w-20 h-20 text-center"
+                      src="/users@2x.png"
+                      alt="Community Icon"
+                    />
+                  </a>
+
                 </div>
                 <div className="flex flex-col justify-center items-center">
+                <a href="https://chat.whatsapp.com/B8c6ngDZTkBI8RBs6JHEgm" target="_blank" rel="noopener noreferrer">
                   <h3 className="font-bold text-2xl">Community</h3>
+                </a>  
                   <p className="text-center mt-2 w-full max-w-xs">
                     We provide support and services to strengthen the community.
                     Our activities include social events, support groups, and
@@ -215,14 +226,19 @@ const HomePage = () => {
               {/* Service 3 */}
               <div className="flex flex-col gap-12 justify-center items-center p-10">
                 <div className="min-h-40 bg-green-600 flex flex-col min-w-40 bg-mediumseagreen-300 justify-center items-center rounded-full">
-                  <img
-                    className="w-20 h-20 text-center"
-                    src="/today@2x.png"
-                    alt="Religious Events Icon"
-                  />
+                  <Link to="/events">
+                    <img
+                      className="w-20 h-20 text-center"
+                      src="/today@2x.png"
+                      alt="Religious Events Icon"
+                    />
+                  </Link>
+
                 </div>
                 <div className="flex flex-col justify-center items-center">
+                <Link to="/events">
                   <h3 className="font-bold text-2xl">Religious Events</h3>
+                 </Link> 
                   <p className="text-center mt-2 w-full max-w-xs">
                     We organize various religious events, including prayers,
                     lectures, and community gatherings to promote spiritual
