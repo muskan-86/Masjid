@@ -41,14 +41,14 @@ const Announcements = () => {
         afterChange: (current) => setCurrentSlide(current),
         responsive: [
             {
-              breakpoint: 480, // Small screens (e.g., phones)
-              settings: {
-                slidesToShow: 1,
-                slidesToScroll: 1,
-                horizontal: true, // Enable vertical scrolling for small screens
-              },
+                breakpoint: 480, // Small screens (e.g., phones)
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                    horizontal: true, // Enable vertical scrolling for small screens
+                },
             },
-          ],
+        ],
         customPaging: (i) => (
             <div
                 style={{
@@ -68,19 +68,23 @@ const Announcements = () => {
         return "#10B981"; // Tailwind color for active dots
     };
     return (
-        <div className="bg-gray-00">
+        <div className="">
             <div>
                 <Navbar />
             </div>
-            <div className=" flex items-center justify-center  bg-opacity-50 z-50 my-16 mx-6">
-                <div className="bg-white px-4 py-6 rounded-3xl shadow-md  max-w-full mx-4 relative">
+            <div className=" flex items-center justify-center z-50 my-16">
+                <div className="bg-white p-4 rounded-lg shadow-md w-11/12 max-w-full mx-4 relative">
+                    {/* Slider Component */}
                     <Slider {...settings}>
                         {announcements.length > 0 ? (
                             announcements.map((announcement) => (
-                                <div key={announcement.id} className=" w-70 rounded-lg">
-                                    {/* <p className="font-bold">{announcement.title}</p> */}
+                                <div key={announcement.id} className="w-70 rounded-lg">
                                     <div className="relative flex flex-col items-center justify-center">
-                                        <img src={announcement.imageUrl} alt={announcement.title} className="h-72 rounded-2xl max-w-md object-cover mb-4" />
+                                        <img
+                                            src={announcement.imageUrl}
+                                            alt={announcement.title}
+                                            className="h-72 rounded-2xl max-w-md object-cover mb-4"
+                                        />
                                     </div>
                                 </div>
                             ))
@@ -90,7 +94,7 @@ const Announcements = () => {
                     </Slider>
                 </div>
             </div>
-            <div className='mt-12'> 
+            <div className='mt-12'>
                 <Footer />
             </div>
         </div>
