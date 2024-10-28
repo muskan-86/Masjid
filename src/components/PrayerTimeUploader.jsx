@@ -189,6 +189,7 @@ const PrayerTimeUploader = () => {
             setMessage('Error deleting file.');
         }
     };
+    
 
     return (
         <div className='mt-4'>
@@ -241,9 +242,15 @@ const PrayerTimeUploader = () => {
                             <a href={file.url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
                                 {file.name}
                             </a>
-                            <button onClick={() => handleDelete(file.fullPath, 'csv')} className="text-red-500 hover:underline">
+                            <div className="flex gap-4">
+                            <a href={file.url} className="text-blue-500" download>
+                                    Download
+                                </a>
+                                <button onClick={() => handleDelete(file.fullPath, 'csv')} className="text-red-500 hover:underline">
                                 Delete
                             </button>
+                            </div>
+                           
                         </li>
                     ))}
                 </ul>
@@ -255,9 +262,15 @@ const PrayerTimeUploader = () => {
                             <a href={file.url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
                                 {file.name}
                             </a>
+                            <div className='flex gap-4'>
+                            <a href={file.url} className="text-blue-500" download>
+                                    Download
+                                </a>
                             <button onClick={() => handleDelete(file.fullPath, 'pdf')} className="text-red-500 hover:underline">
                                 Delete
                             </button>
+                            </div>
+                            
                         </li>
                     ))}
                 </ul>

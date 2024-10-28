@@ -56,25 +56,37 @@ const AnnouncementPopup = ({ isOpen, onClose }) => {
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-            <div className="bg-white p-4 rounded-lg shadow-md w-11/12 max-w-sm mx-4 relative">
-                <button onClick={onClose} className="absolute top-2 right-2 text-gray-600 text-3xl">&times;</button>
-                <Slider {...settings}>
-                {announcements.length > 0 ? (
-                    announcements.map((announcement) => (
-                        <div key={announcement.id} className=" w-70 rounded-lg">
-                            {/* <p className="font-bold">{announcement.title}</p> */}
-                            <div className="relative flex flex-col items-center justify-center">
-                            <img src={announcement.imageUrl} alt={announcement.title} className="h-72 rounded-2xl max-w-md object-cover mb-4" />
-                            </div>
+    <div className="bg-white p-4 rounded-lg shadow-md w-11/12 max-w-sm mx-4 relative">
+        {/* Close Button */}
+        <button
+            onClick={onClose}
+            className="absolute top-2 right-2 text-gray-600 text-3xl leading-none focus:outline-none hover:text-gray-800 z-50"
+            style={{ cursor: 'pointer', padding: 0, margin: 0 }}
+        >
+            &times;
+        </button>
+
+        {/* Slider Component */}
+        <Slider {...settings}>
+            {announcements.length > 0 ? (
+                announcements.map((announcement) => (
+                    <div key={announcement.id} className="w-70 rounded-lg">
+                        <div className="relative flex flex-col items-center justify-center">
+                            <img
+                                src={announcement.imageUrl}
+                                alt={announcement.title}
+                                className="h-72 rounded-2xl max-w-md object-cover mb-4"
+                            />
                         </div>
-                    ))
-                ) : (
-                    <p className="text-center text-gray-500">No announcements available.</p>
-                )}
-                </Slider>
-                
-            </div>
-        </div>
+                    </div>
+                ))
+            ) : (
+                <p className="text-center text-gray-500">No announcements available.</p>
+            )}
+        </Slider>
+    </div>
+</div>
+
     );
 };
 

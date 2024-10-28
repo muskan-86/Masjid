@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { db } from '../firebase-config'; 
-import { collection, getDocs, addDoc, deleteDoc, doc } from 'firebase/firestore'; 
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'; // Import necessary functions
+import { db } from '../firebase-config';
+import { 
+    collection, getDocs, addDoc, deleteDoc, doc, updateDoc 
+} from 'firebase/firestore';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import BackButton from './BackButton';
 import { useAnnouncements } from '../context/AnnouncementContext';
 
@@ -12,8 +14,8 @@ const AnnouncementUpdate = () => {
 
     // Fetch announcements from Firestore
     const fetchAnnouncements = async () => {
-        const querySnapshot = await getDocs(collection(db, 'announcements')); 
-        const fetchedAnnouncements = querySnapshot.docs.map(doc => ({
+        const querySnapshot = await getDocs(collection(db, 'announcements'));
+        const fetchedAnnouncements = querySnapshot.docs.map((doc) => ({
             id: doc.id,
             ...doc.data(),
         }));
@@ -34,7 +36,7 @@ const AnnouncementUpdate = () => {
     const uploadImage = async () => {
         if (!imageFile) return;
 
-        const storage = getStorage(); // Initialize storage here
+        const storage = getStorage();
         const storageRef = ref(storage, `announcements/${imageFile.name}`);
         await uploadBytes(storageRef, imageFile);
         const url = await getDownloadURL(storageRef);
@@ -47,12 +49,10 @@ const AnnouncementUpdate = () => {
         if (newAnnouncement.title && imageUrl) {
             const announcement = { title: newAnnouncement.title, imageUrl };
             const docRef = await addDoc(collection(db, 'announcements'), announcement);
-    
-            // Immediately update the local state with the new announcement
+
             const newAnnounceWithId = { id: docRef.id, ...announcement };
             setAnnouncements((prevAnnouncements) => [...prevAnnouncements, newAnnounceWithId]);
-    
-            // Reset the form
+
             setNewAnnouncement({ title: '', imageUrl: '' });
             setImageFile(null);
         } else {
@@ -61,10 +61,45 @@ const AnnouncementUpdate = () => {
     };
 
     const handleDeleteAnnouncement = async (id) => {
-        // Delete announcement from Firestore
         await deleteDoc(doc(db, 'announcements', id));
         const updatedAnnouncements = announcements.filter((announcement) => announcement.id !== id);
         setAnnouncements(updatedAnnouncements);
+    };
+
+    // Change order logic: move up or down
+    const changeOrder = async (announcementId, direction) => {
+        const index = announcements.findIndex((a) => a.id === announcementId);
+        if (direction === 'up' && index > 0) {
+            const newAnnouncements = [...announcements];
+            [newAnnouncements[index], newAnnouncements[index - 1]] = [
+                newAnnouncements[index - 1],
+                newAnnouncements[index],
+            ];
+
+            setAnnouncements(newAnnouncements);
+            await updateFirestoreOrder(newAnnouncements);
+        } else if (direction === 'down' && index < announcements.length - 1) {
+            const newAnnouncements = [...announcements];
+            [newAnnouncements[index], newAnnouncements[index + 1]] = [
+                newAnnouncements[index + 1],
+                newAnnouncements[index],
+            ];
+
+            setAnnouncements(newAnnouncements);
+            await updateFirestoreOrder(newAnnouncements);
+        }
+    };
+
+    const updateFirestoreOrder = async (updatedAnnouncements) => {
+        try {
+            for (let i = 0; i < updatedAnnouncements.length; i++) {
+                const announcementDoc = doc(db, 'announcements', updatedAnnouncements[i].id);
+                await updateDoc(announcementDoc, { order: i });
+            }
+        } catch (err) {
+            console.error('Error updating order in Firestore:', err);
+            alert('Failed to update announcement order. Please try again.');
+        }
     };
 
     return (
@@ -77,7 +112,9 @@ const AnnouncementUpdate = () => {
                         type="text"
                         placeholder="Announcement Title"
                         value={newAnnouncement.title}
-                        onChange={(e) => setNewAnnouncement({ ...newAnnouncement, title: e.target.value })}
+                        onChange={(e) =>
+                            setNewAnnouncement({ ...newAnnouncement, title: e.target.value })
+                        }
                         className="w-full p-2 mb-2 border rounded"
                     />
                     <input
@@ -97,18 +134,39 @@ const AnnouncementUpdate = () => {
                 <div className="w-full max-w-md">
                     <h2 className="text-xl font-semibold mb-4">Current Announcements</h2>
                     {announcements.length > 0 ? (
-                        announcements.map((announcement) => (
-                            <div key={announcement.id} className="bg-white p-4 mb-2 rounded shadow-md flex items-center justify-between">
+                        announcements.map((announcement, index) => (
+                            <div
+                                key={announcement.id}
+                                className="bg-white p-4 mb-2 rounded shadow-md flex items-center justify-between"
+                            >
                                 <div>
                                     <p className="font-bold">{announcement.title}</p>
-                                    <img src={announcement.imageUrl} alt={announcement.title} className="h-16 w-16 object-cover mt-2" />
+                                    <img
+                                        src={announcement.imageUrl}
+                                        alt={announcement.title}
+                                        className="h-16 w-16 object-cover mt-2"
+                                    />
                                 </div>
-                                <button
-                                    onClick={() => handleDeleteAnnouncement(announcement.id)}
-                                    className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-                                >
-                                    Delete
-                                </button>
+                                <div className="flex gap-2">
+                                    <button
+                                        onClick={() => changeOrder(announcement.id, 'up')}
+                                        className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600"
+                                    >
+                                        Up
+                                    </button>
+                                    <button
+                                        onClick={() => changeOrder(announcement.id, 'down')}
+                                        className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600"
+                                    >
+                                        Down
+                                    </button>
+                                    <button
+                                        onClick={() => handleDeleteAnnouncement(announcement.id)}
+                                        className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+                                    >
+                                        Delete
+                                    </button>
+                                </div>
                             </div>
                         ))
                     ) : (

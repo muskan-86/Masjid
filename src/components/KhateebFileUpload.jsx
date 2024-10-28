@@ -95,19 +95,27 @@ const KhateebFileUpload = () => {
                         {uploading ? 'Uploading...' : 'Upload CSV'}
                     </button>
                 </div>
+                <div className="mt-6 flex justify-center">
+                    <h2 className=" text-lg font-bold items-center">Uploaded CSV File</h2>
+                </div>
 
                 {/* Show uploaded file details and delete button */}
                 {uploadedFile && (
                     <div className="mt-6">
-                        <h2 className="text-lg font-bold">Uploaded CSV File</h2>
-                        <div className="flex items-center mt-2"> {/* Change flex-col to flex */}
-                            <p className="mr-4">{uploadedFile.fileName}</p> {/* Add margin to the right */}
-                            <button
-                                onClick={() => handleDelete(uploadedFile.id, uploadedFile.fileURL)}
-                                className="text-red-500 hover:text-red-700"
-                            >
-                                Delete
-                            </button>
+                        <div className="flex items-center mt-2">
+                            <p className="mr-4">{uploadedFile.fileName}</p>
+                            <div className="flex gap-4">
+                                <a href={uploadedFile.fileURL} className="text-blue-500" download>
+                                    Download
+                                </a>
+                                <button
+                                    onClick={() => handleDelete(uploadedFile.id, uploadedFile.fileURL)}
+                                    className="text-red-500 hover:text-red-700"
+                                >
+                                    Delete
+                                </button>
+                            </div>
+
                         </div>
                     </div>
                 )}
