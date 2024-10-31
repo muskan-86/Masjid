@@ -118,9 +118,9 @@ const Event = () => {
     infinite: true,
     speed: 500,
     slidesToShow: isMobile ? 1 : 3,
+    autoplay: !isMobile,
     slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 3000,
+    autoplaySpeed: 2000,
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
    
